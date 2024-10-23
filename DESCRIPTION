@@ -1,4 +1,4 @@
-Package: probitUM
+Package: pumBayes
 Type: Package
 Title: Bayesian Probit Unfolding Models for Binary Preference Data
 Version: 0.1.0

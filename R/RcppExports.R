@@ -2,30 +2,30 @@
 # Generator token: 10BE3573-1514-4C36-9D1C-5A225CD40393
 
 bvnd <- function(DH, DK, R) {
-    .Call('_probitUM_bvnd', PACKAGE = 'probitUM', DH, DK, R)
+    .Call('_pumBayes_bvnd', PACKAGE = 'pumBayes', DH, DK, R)
 }
 
 bvndvec <- function(DH, DK, R) {
-    .Call('_probitUM_bvndvec', PACKAGE = 'probitUM', DH, DK, R)
+    .Call('_pumBayes_bvndvec', PACKAGE = 'pumBayes', DH, DK, R)
 }
 
 sample_t <- function(df, location, scale) {
-    .Call('_probitUM_sample_t', PACKAGE = 'probitUM', df, location, scale)
+    .Call('_pumBayes_sample_t', PACKAGE = 'pumBayes', df, location, scale)
 }
 
 truncated_t_sample <- function(df, location, scale, upper) {
-    .Call('_probitUM_truncated_t_sample', PACKAGE = 'probitUM', df, location, scale, upper)
+    .Call('_pumBayes_truncated_t_sample', PACKAGE = 'pumBayes', df, location, scale, upper)
 }
 
 sample_probit_static_rcpp <- function(vote_m, all_param_draws, y_star_m_1, y_star_m_2, y_star_m_3, leg_start_ind, alpha_v_1_start_ind, alpha_v_2_start_ind, delta_v_1_start_ind, delta_v_2_start_ind, leg_mean, leg_sd, alpha_mean_v, alpha_cov_s, delta_mean_v, delta_cov_s, nu, num_iter, start_iter, keep_iter, flip_rate, pos_ind) {
-    .Call('_probitUM_sample_probit_static_rcpp', PACKAGE = 'probitUM', vote_m, all_param_draws, y_star_m_1, y_star_m_2, y_star_m_3, leg_start_ind, alpha_v_1_start_ind, alpha_v_2_start_ind, delta_v_1_start_ind, delta_v_2_start_ind, leg_mean, leg_sd, alpha_mean_v, alpha_cov_s, delta_mean_v, delta_cov_s, nu, num_iter, start_iter, keep_iter, flip_rate, pos_ind)
+    .Call('_pumBayes_sample_probit_static_rcpp', PACKAGE = 'pumBayes', vote_m, all_param_draws, y_star_m_1, y_star_m_2, y_star_m_3, leg_start_ind, alpha_v_1_start_ind, alpha_v_2_start_ind, delta_v_1_start_ind, delta_v_2_start_ind, leg_mean, leg_sd, alpha_mean_v, alpha_cov_s, delta_mean_v, delta_cov_s, nu, num_iter, start_iter, keep_iter, flip_rate, pos_ind)
 }
 
 sample_probit_dynamic_rcpp <- function(vote_m, all_param_draws, y_star_m_1, y_star_m_2, y_star_m_3, judge_start_inds, judge_end_inds, case_years, case_judge_years_ind_m, judge_year_v, alpha_v_1_start_ind, alpha_v_2_start_ind, delta_v_1_start_ind, delta_v_2_start_ind, rho_ind, alpha_mean_v, alpha_cov_s, delta_mean_v, delta_cov_s, rho_mean, rho_sigma, rho_sd, nu, num_iter, start_iter, keep_iter, flip_rate, pos_judge_ind, neg_judge_ind, pos_judge_year, neg_judge_year) {
-    .Call('_probitUM_sample_probit_dynamic_rcpp', PACKAGE = 'probitUM', vote_m, all_param_draws, y_star_m_1, y_star_m_2, y_star_m_3, judge_start_inds, judge_end_inds, case_years, case_judge_years_ind_m, judge_year_v, alpha_v_1_start_ind, alpha_v_2_start_ind, delta_v_1_start_ind, delta_v_2_start_ind, rho_ind, alpha_mean_v, alpha_cov_s, delta_mean_v, delta_cov_s, rho_mean, rho_sigma, rho_sd, nu, num_iter, start_iter, keep_iter, flip_rate, pos_judge_ind, neg_judge_ind, pos_judge_year, neg_judge_year)
+    .Call('_pumBayes_sample_probit_dynamic_rcpp', PACKAGE = 'pumBayes', vote_m, all_param_draws, y_star_m_1, y_star_m_2, y_star_m_3, judge_start_inds, judge_end_inds, case_years, case_judge_years_ind_m, judge_year_v, alpha_v_1_start_ind, alpha_v_2_start_ind, delta_v_1_start_ind, delta_v_2_start_ind, rho_ind, alpha_mean_v, alpha_cov_s, delta_mean_v, delta_cov_s, rho_mean, rho_sigma, rho_sd, nu, num_iter, start_iter, keep_iter, flip_rate, pos_judge_ind, neg_judge_ind, pos_judge_year, neg_judge_year)
 }
 
 calc_waic_probit_bggum_three_utility_block_rcpp <- function(leg_ideology, alpha_m, delta_m, case_vote_m, case_year, block_m) {
-    .Call('_probitUM_calc_waic_probit_bggum_three_utility_block_rcpp', PACKAGE = 'probitUM', leg_ideology, alpha_m, delta_m, case_vote_m, case_year, block_m)
+    .Call('_pumBayes_calc_waic_probit_bggum_three_utility_block_rcpp', PACKAGE = 'pumBayes', leg_ideology, alpha_m, delta_m, case_vote_m, case_year, block_m)
 }
 

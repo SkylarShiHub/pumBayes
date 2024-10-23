@@ -5,7 +5,7 @@
 #' @param years_v A time vector
 #' @param chain_run The posterior samples obtained from MCMC
 #' @importFrom Rcpp sourceCpp
-#' @useDynLib probitUM
+#' @useDynLib pumBayes
 #' @examples
 #' waic_dy = cal_waic_dynamic(mqVotes, mqTime, post_samples_dy)
 #' @export

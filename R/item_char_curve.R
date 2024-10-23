@@ -4,7 +4,7 @@
 #' @param post_samples A list of posterior samples of parameters obtained from MCMC.
 #' @importFrom Rcpp sourceCpp
 #' @import ggplot2
-#' @useDynLib probitUM
+#' @useDynLib pumBayes
 #' @return An item characteristic curve of the input issue
 #' @examples
 #' item_result = item_char_curve(rollnumber = 100, post_samples = post_samples)

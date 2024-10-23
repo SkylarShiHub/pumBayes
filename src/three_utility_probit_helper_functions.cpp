@@ -605,15 +605,15 @@ List sample_probit_static_rcpp(
                      current_param_val_v(delta_v_2_start_ind + j)};
       arma::vec alpha_v_0 = {current_param_val_v(alpha_v_1_start_ind + j),
                      current_param_val_v(alpha_v_2_start_ind + j)};
-      arma::vec phi1_out = sample_phi1(alpha_v_0, alpha_mean_v, alpha_cov_s, nu);
-
+      // arma::vec phi1_out = sample_phi1(alpha_v_0, alpha_mean_v, alpha_cov_s, nu);
+      double phi1 = 1.0;
       arma::vec out_v_alpha =
         sample_alpha(
           y_star_m_1.submat(interested_inds, current_ind),
           y_star_m_3.submat(interested_inds, current_ind),
           current_param_val_v(leg_start_ind + interested_inds),
           delta_v, alpha_mean_v, alpha_cov_s,
-          delta_mean_v, delta_cov_s, z_v(j), phi1_out(0));
+          delta_mean_v, delta_cov_s, z_v(j), phi1);
 
       current_param_val_v(alpha_v_1_start_ind + j) = out_v_alpha(0);
       current_param_val_v(alpha_v_2_start_ind + j) = out_v_alpha(1);
@@ -628,14 +628,15 @@ List sample_probit_static_rcpp(
                      current_param_val_v(alpha_v_2_start_ind + j)};
       arma::vec delta_v = {current_param_val_v(delta_v_1_start_ind + j),
                      current_param_val_v(delta_v_2_start_ind + j)}; 
-      arma::vec phi2_out = sample_phi2(delta_v, delta_mean_v, delta_cov_s,
-                                z_v(j), nu);
+      double phi2 = 1.0;
+      // arma::vec phi2_out = sample_phi2(delta_v, delta_mean_v, delta_cov_s,
+      //                           z_v(j), nu);
       arma::vec out_v_delta =
         sample_delta(
           y_star_m_1.submat(interested_inds, current_ind),
           y_star_m_3.submat(interested_inds, current_ind),
           alpha_v, current_param_val_v(leg_start_ind + interested_inds),
-          delta_mean_v, delta_cov_s, z_v(j), phi2_out(0));
+          delta_mean_v, delta_cov_s, z_v(j), phi2);
 
       current_param_val_v(delta_v_1_start_ind + j) = out_v_delta(0);
       current_param_val_v(delta_v_2_start_ind + j) = out_v_delta(1);
@@ -841,7 +842,8 @@ List sample_probit_dynamic_rcpp(
                      current_param_val_v(alpha_v_2_start_ind + j)};
       arma::uvec judge_years_v = case_judge_years_ind_m.col(j);
 
-      arma::vec phi1_out = sample_phi1(alpha_v_0, alpha_mean_v, alpha_cov_s, nu);
+      // arma::vec phi1_out = sample_phi1(alpha_v_0, alpha_mean_v, alpha_cov_s, nu);
+      double phi1 = 1.0;
       arma::vec out_v_alpha =
         sample_alpha(
           y_star_m_1.submat(interested_inds, current_ind),
@@ -850,7 +852,7 @@ List sample_probit_dynamic_rcpp(
             judge_start_inds(interested_inds) +
             judge_years_v(interested_inds)),
           delta_v, alpha_mean_v, alpha_cov_s,
-          delta_mean_v, delta_cov_s, z_v(j), phi1_out(0));
+          delta_mean_v, delta_cov_s, z_v(j), phi1);
 
       current_param_val_v(alpha_v_1_start_ind + j) = out_v_alpha(0);
       current_param_val_v(alpha_v_2_start_ind + j) = out_v_alpha(1);
@@ -867,8 +869,9 @@ List sample_probit_dynamic_rcpp(
                      current_param_val_v(delta_v_2_start_ind + j)};
       arma::uvec judge_years_v = case_judge_years_ind_m.col(j);
 
-      arma::vec phi2_out = sample_phi2(delta_v, delta_mean_v, delta_cov_s,
-                                z_v(j), nu);
+      // arma::vec phi2_out = sample_phi2(delta_v, delta_mean_v, delta_cov_s,
+                                // z_v(j), nu);
+      double phi2 = 1.0;
       arma::vec out_v_delta =
         sample_delta(
           y_star_m_1.submat(interested_inds, current_ind),
@@ -876,7 +879,7 @@ List sample_probit_dynamic_rcpp(
           alpha_v, current_param_val_v(
               judge_start_inds(interested_inds) +
                 judge_years_v(interested_inds)),
-          delta_mean_v, delta_cov_s, z_v(j), phi2_out(0));
+          delta_mean_v, delta_cov_s, z_v(j), phi2);
 
       current_param_val_v(delta_v_1_start_ind + j) = out_v_delta(0);
       current_param_val_v(delta_v_2_start_ind + j) = out_v_delta(1);

@@ -17,7 +17,7 @@
         "-Ic:/rtools43/x86_64~1.pos/bin/../lib/gcc/x86_64-w64-mingw32.static.posix/12.3.0/../../../../include",
         "-Ic:/rtools43/x86_64~1.pos/bin/../lib/gcc/x86_64-w64-mingw32.static.posix/12.3.0/include-fixed",
         "-include",
-        "E:/OneDrive/UW_Seattle/paper/Abel/probitUM/.Rproj.user/69F5A60C/compilation-database/mingw64/cpp-definitions.h"
+        "E:/OneDrive/UW_Seattle/paper/Abel/pumBayes/.Rproj.user/69F5A60C/compilation-database/mingw64/cpp-definitions.h"
     ],
     "pch": "RcppArmadillo",
     "is_cpp": true,

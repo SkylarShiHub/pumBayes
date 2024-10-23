@@ -4,7 +4,7 @@
 #' The entries can only be 0 (indicating ”No”), 1 (indicating ”Yes”), or NA (indicating missing data).
 #' @param post_samples A list of posterior samples of parameters obtained from MCMC.
 #' @importFrom Rcpp sourceCpp
-#' @useDynLib probitUM
+#' @useDynLib pumBayes
 #' @return A matrix of probabilities corresponding to each vote
 #' @examples
 #' prob_mat = cal_prob(vote = house_votes_m, post_samples = post_samples)
