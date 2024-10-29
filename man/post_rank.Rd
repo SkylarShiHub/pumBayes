@@ -20,5 +20,5 @@ This function calculates quantile ranks for each legislator based on posterior s
 The function can handle any specified quantiles, such as median (0.5), and is flexible to support other quantiles provided as input.
 }
 \examples{
-rank_results = post_rank(beta = post_samples$beta, quantiles = c(0.5))
+rank_results = post_rank(beta = post_samples_pum$beta, quantiles = c(0.5))
 }

@@ -7,7 +7,7 @@
 #' @useDynLib pumBayes
 #' @return A matrix of probabilities corresponding to each vote
 #' @examples
-#' prob_mat = cal_prob(vote = house_votes_m, post_samples = post_samples)
+#' prob_mat = cal_prob(vote = house_votes_m, post_samples = post_samples_pum)
 #' @export
 
 cal_prob <- function(vote, post_samples) {

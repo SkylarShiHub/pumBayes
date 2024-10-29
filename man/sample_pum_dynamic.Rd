@@ -64,5 +64,5 @@ hyperparams = list(beta_mean = 0, beta_var = 1, alpha_mean = c(0, 0), alpha_scal
 iter_config = list(num_iter = 100, start_iter = 0, keep_iter = 1, flip_rate = 0.1)
 sign_refs = list(pos_inds = c(39, 5), neg_inds = c(12, 29),
                  pos_year_inds = list(1:31, 1), neg_year_inds = list(1:29, 1:24))
-post_samples_dy = sample_pum_dynamic(mqVotes, mqTime, hyperparams, iter_config, sign_refs, verbose)
+post_samples_dy = sample_pum_dynamic(mqVotes, mqTime, hyperparams, iter_config, sign_refs, verbose = FALSE)
 }

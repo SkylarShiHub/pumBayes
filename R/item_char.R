@@ -10,7 +10,7 @@
 #' and confidence intervals (`ci_lower` and `ci_upper`) for the input issue,
 #' which can be used to plot the item characteristic curve.
 #' @examples
-#' item_data <- item_char(vote_num = 5, post_samples = post_samples)
+#' item_data <- item_char(vote_num = 5, post_samples = post_samples_pum)
 #' @export
 item_char = function(vote_num, post_samples){
   beta = as.matrix(post_samples$beta)

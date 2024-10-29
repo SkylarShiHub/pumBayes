@@ -6,7 +6,7 @@
 #' @return A data frame containing the legislators' names, party affiliations, states, and their ranks at each specified quantile.
 #' If the median is included, it will be named `median` in the output. The output data frame is sorted in ascending order based on the values in the median column.
 #' @examples
-#' rank_results = post_rank(beta = post_samples$beta, quantiles = c(0.5))
+#' rank_results = post_rank(beta = post_samples_pum$beta, quantiles = c(0.5))
 #' @export
 
 post_rank = function(beta, quantiles = c(0.5)){

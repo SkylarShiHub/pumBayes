@@ -19,5 +19,5 @@ A matrix of probabilities corresponding to each vote
 This function is used to get the probabilities of each vote result for the given members and issues
 }
 \examples{
-prob_mat = cal_prob(vote = house_votes_m, post_samples = post_samples)
+prob_mat = cal_prob(vote = house_votes_m, post_samples = post_samples_pum)
 }
