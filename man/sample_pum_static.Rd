@@ -6,63 +6,59 @@
 \usage{
 sample_pum_static(
   vote_info,
-  data_process = list(leg_rm = NULL, issue_rm = NULL, combine_ind = NULL, combine_party =
-    NULL),
+  data_process = list(leg_rm = NULL, combine_leg_name = NULL, combine_leg_party = NULL,
+    lop_leg = 0.6, lop_issue = 0),
   hyperparams,
   iter_config,
-  pos_ind = 0
+  pos_leg = "SCALISE",
+  verbose = FALSE
 )
 }
 \arguments{
-\item{vote_info}{A vote matrix (or a rollcall object including votes) in which rows represent members and columns represent issues.
-The entries can only be 0 (indicating ”No”), 1 (indicating ”Yes”), or NA (indicating missing data).}
+\item{vote_info}{A vote matrix (or a rollcall object) in which rows represent members and columns represent issues.}
 
-\item{hyperparams}{A list of hyperparameter values. beta_mean is a value for the prior mean of beta.
-beta_var is a value for the variance of beta. alpha_mean is a vector of 2 components representing the prior
-means of alpha1 and alpha2. alpha_scale is a value for the scale parameters of alpha1 and alpha2.
-delta_mean is a vector of 2 components representing the prior means of delta1 and delta2.
-delta_scale is a value for the scale parameters of delta1 and delta2. nu is a fixed value making phi follow
-Gamma(nu/2,nu/2).}
+\item{data_process}{A list of parameters for data preprocessing:
+- `leg_rm`: A list of legislators to be removed.
+- `combine_leg_name` and `combine_leg_party`: Vectors for merging legislators' votes by name and party.
+- `lop_leg`: The proportion of missing votes that warrants removing a legislator.
+- `lop_issue`: The threshold of minority votes below which an issue will be excluded.}
 
-\item{iter_config}{A list corresponding to iteration configurations, num_iter is the total number of iterations.
-start_iter is the iteration number to start retaining data after the burn-in period. keep_iter is the interval
-at which iterations are kept for posterior samples. flip_rate is the probability of fliping signs directly in the M-H step.}
+\item{hyperparams}{A list of hyperparameter values:
+- `beta_mean`: Prior mean for beta.
+- `beta_var`: Variance of beta.
+- `alpha_mean`: A vector of two components representing the prior means of `alpha1` and `alpha2`.
+- `alpha_scale`: Scale parameter for `alpha1` and `alpha2`.
+- `delta_mean`: A vector of two components representing the prior means of `delta1` and `delta2`.
+- `delta_scale`: Scale parameter for `delta1` and `delta2`.}
 
-\item{pos_ind}{The index of the reference member whose position is kept positive.}
+\item{iter_config}{A list of iteration configurations:
+- `num_iter`: Total number of iterations. It is recommended to set this to at least 30,000 to ensure reliable results.
+- `start_iter`: Iteration number to start retaining data after burn-in.
+- `keep_iter`: Interval at which iterations are kept for posterior samples.
+- `flip_rate`: Probability of directly flipping signs in the M-H step, rather than resampling from the priors.}
 
-\item{leg_pos_init}{A vector of initial values for all the positions of legislators. The
-length of this vector should be equal to the number of iterations times the number of members}
+\item{pos_leg}{Name of the legislator whose position is kept positive.}
 
-\item{alpha_pos_init}{A vector of initial values for all the alpha parameters. This vector
-should have a length of 2 times the number of iterations times the number of issues,
-as each issue has two alpha parameters.}
-
-\item{delta_pos_init}{A vector of initial values for all the delta parameters. The length
-should be 2 times the number of iterations times the number of issues}
-
-\item{y_star_m_1_init}{Matrices of initial values for the three auxiliary variables, with
-dimensions equal to the number of members by the number of issues. Same for the other two parameters.}
-
-\item{start_val}{A vector of all initial values for each parameter.}
-
-\item{sample_beta}{A Boolean value indicating whether to sample beta in the model.}
+\item{verbose}{Logical. If `TRUE`, prints progress and additional information during the sampling process.}
 }
 \value{
-A list mainly containing:
-- `beta`: A matrix of parameter draws for beta.
-- `alpha1`: A matrix of parameter draws of alpha1.
-- `alpha2`: A matrix of parameter draws of alpha2.
-- `delta1`: A matrix of parameter draws of delta1.
-- `delta2`: A matrix of parameter draws of delta2.
+A list primarily containing:
+  - `beta`: A matrix of posterior samples for `beta`.
+  - `alpha1`: A matrix of posterior samples for `alpha1`.
+  - `alpha2`: A matrix of posterior samples for `alpha2`.
+  - `delta1`: A matrix of posterior samples for `delta1`.
+  - `delta2`: A matrix of posterior samples for `delta2`.
+  - `vote_info`: The vote object after data preprocessing.
 }
 \description{
-This function is used to get samples of all the parameters from their posterior distributions
-based on the static probit unfolding model
+This function generates posterior samples of all parameters based on the static probit unfolding model.
 }
 \examples{
-hyperparams = list(beta_mean = 0, beta_var = 1, alpha_mean = c(0, 0),
-                   alpha_scale = 5, delta_mean = c(-2, 10), delta_scale = sqrt(10))
-iter_config = list(num_iter = 10, start_iter = 0, keep_iter = 1, flip_rate = 0.1)
-data_process = list(leg_rm = NULL, issue_rm = NULL, combine_ind = NULL, combine_party = NULL)
-post_samples = sample_pum_static(house_votes_m, data_process, hyperparams, iter_config, pos_ind = 82)
+hyperparams <- list(beta_mean = 0, beta_var = 1, alpha_mean = c(0, 0),
+                    alpha_scale = 5, delta_mean = c(-2, 10), delta_scale = sqrt(10))
+iter_config <- list(num_iter = 10, start_iter = 0, keep_iter = 1, flip_rate = 0.1)
+data_process <- list(leg_rm = NULL, combine_leg_name = NULL, combine_leg_party = NULL,
+                     lop_leg = 0.6, lop_issue = 0)
+post_samples <- sample_pum_static(house_votes_m, data_process, hyperparams,
+                                  iter_config, pos_leg = "SCALISE", verbose = FALSE)
 }

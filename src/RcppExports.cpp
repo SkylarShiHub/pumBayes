@@ -65,8 +65,8 @@ BEGIN_RCPP
 END_RCPP
 }
 // sample_probit_static_rcpp
-List sample_probit_static_rcpp(arma::mat vote_m, arma::mat all_param_draws, arma::mat y_star_m_1, arma::mat y_star_m_2, arma::mat y_star_m_3, int leg_start_ind, int alpha_v_1_start_ind, int alpha_v_2_start_ind, int delta_v_1_start_ind, int delta_v_2_start_ind, double leg_mean, double leg_sd, arma::vec alpha_mean_v, arma::mat alpha_cov_s, arma::vec delta_mean_v, arma::mat delta_cov_s, double nu, int num_iter, int start_iter, int keep_iter, double flip_rate, int pos_ind);
-RcppExport SEXP _pumBayes_sample_probit_static_rcpp(SEXP vote_mSEXP, SEXP all_param_drawsSEXP, SEXP y_star_m_1SEXP, SEXP y_star_m_2SEXP, SEXP y_star_m_3SEXP, SEXP leg_start_indSEXP, SEXP alpha_v_1_start_indSEXP, SEXP alpha_v_2_start_indSEXP, SEXP delta_v_1_start_indSEXP, SEXP delta_v_2_start_indSEXP, SEXP leg_meanSEXP, SEXP leg_sdSEXP, SEXP alpha_mean_vSEXP, SEXP alpha_cov_sSEXP, SEXP delta_mean_vSEXP, SEXP delta_cov_sSEXP, SEXP nuSEXP, SEXP num_iterSEXP, SEXP start_iterSEXP, SEXP keep_iterSEXP, SEXP flip_rateSEXP, SEXP pos_indSEXP) {
+List sample_probit_static_rcpp(arma::mat vote_m, arma::mat all_param_draws, arma::mat y_star_m_1, arma::mat y_star_m_2, arma::mat y_star_m_3, int leg_start_ind, int alpha_v_1_start_ind, int alpha_v_2_start_ind, int delta_v_1_start_ind, int delta_v_2_start_ind, double leg_mean, double leg_sd, arma::vec alpha_mean_v, arma::mat alpha_cov_s, arma::vec delta_mean_v, arma::mat delta_cov_s, double nu, int num_iter, int start_iter, int keep_iter, double flip_rate, int pos_ind, bool verbose);
+RcppExport SEXP _pumBayes_sample_probit_static_rcpp(SEXP vote_mSEXP, SEXP all_param_drawsSEXP, SEXP y_star_m_1SEXP, SEXP y_star_m_2SEXP, SEXP y_star_m_3SEXP, SEXP leg_start_indSEXP, SEXP alpha_v_1_start_indSEXP, SEXP alpha_v_2_start_indSEXP, SEXP delta_v_1_start_indSEXP, SEXP delta_v_2_start_indSEXP, SEXP leg_meanSEXP, SEXP leg_sdSEXP, SEXP alpha_mean_vSEXP, SEXP alpha_cov_sSEXP, SEXP delta_mean_vSEXP, SEXP delta_cov_sSEXP, SEXP nuSEXP, SEXP num_iterSEXP, SEXP start_iterSEXP, SEXP keep_iterSEXP, SEXP flip_rateSEXP, SEXP pos_indSEXP, SEXP verboseSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
@@ -92,13 +92,14 @@ BEGIN_RCPP
     Rcpp::traits::input_parameter< int >::type keep_iter(keep_iterSEXP);
     Rcpp::traits::input_parameter< double >::type flip_rate(flip_rateSEXP);
     Rcpp::traits::input_parameter< int >::type pos_ind(pos_indSEXP);
-    rcpp_result_gen = Rcpp::wrap(sample_probit_static_rcpp(vote_m, all_param_draws, y_star_m_1, y_star_m_2, y_star_m_3, leg_start_ind, alpha_v_1_start_ind, alpha_v_2_start_ind, delta_v_1_start_ind, delta_v_2_start_ind, leg_mean, leg_sd, alpha_mean_v, alpha_cov_s, delta_mean_v, delta_cov_s, nu, num_iter, start_iter, keep_iter, flip_rate, pos_ind));
+    Rcpp::traits::input_parameter< bool >::type verbose(verboseSEXP);
+    rcpp_result_gen = Rcpp::wrap(sample_probit_static_rcpp(vote_m, all_param_draws, y_star_m_1, y_star_m_2, y_star_m_3, leg_start_ind, alpha_v_1_start_ind, alpha_v_2_start_ind, delta_v_1_start_ind, delta_v_2_start_ind, leg_mean, leg_sd, alpha_mean_v, alpha_cov_s, delta_mean_v, delta_cov_s, nu, num_iter, start_iter, keep_iter, flip_rate, pos_ind, verbose));
     return rcpp_result_gen;
 END_RCPP
 }
 // sample_probit_dynamic_rcpp
-List sample_probit_dynamic_rcpp(arma::mat vote_m, arma::mat all_param_draws, arma::mat y_star_m_1, arma::mat y_star_m_2, arma::mat y_star_m_3, arma::uvec judge_start_inds, arma::uvec judge_end_inds, arma::uvec case_years, arma::umat case_judge_years_ind_m, arma::uvec judge_year_v, int alpha_v_1_start_ind, int alpha_v_2_start_ind, int delta_v_1_start_ind, int delta_v_2_start_ind, int rho_ind, arma::vec alpha_mean_v, arma::mat alpha_cov_s, arma::vec delta_mean_v, arma::mat delta_cov_s, double rho_mean, double rho_sigma, double rho_sd, double nu, int num_iter, int start_iter, int keep_iter, double flip_rate, arma::uvec pos_judge_ind, arma::uvec neg_judge_ind, arma::uvec pos_judge_year, arma::uvec neg_judge_year);
-RcppExport SEXP _pumBayes_sample_probit_dynamic_rcpp(SEXP vote_mSEXP, SEXP all_param_drawsSEXP, SEXP y_star_m_1SEXP, SEXP y_star_m_2SEXP, SEXP y_star_m_3SEXP, SEXP judge_start_indsSEXP, SEXP judge_end_indsSEXP, SEXP case_yearsSEXP, SEXP case_judge_years_ind_mSEXP, SEXP judge_year_vSEXP, SEXP alpha_v_1_start_indSEXP, SEXP alpha_v_2_start_indSEXP, SEXP delta_v_1_start_indSEXP, SEXP delta_v_2_start_indSEXP, SEXP rho_indSEXP, SEXP alpha_mean_vSEXP, SEXP alpha_cov_sSEXP, SEXP delta_mean_vSEXP, SEXP delta_cov_sSEXP, SEXP rho_meanSEXP, SEXP rho_sigmaSEXP, SEXP rho_sdSEXP, SEXP nuSEXP, SEXP num_iterSEXP, SEXP start_iterSEXP, SEXP keep_iterSEXP, SEXP flip_rateSEXP, SEXP pos_judge_indSEXP, SEXP neg_judge_indSEXP, SEXP pos_judge_yearSEXP, SEXP neg_judge_yearSEXP) {
+List sample_probit_dynamic_rcpp(arma::mat vote_m, arma::mat all_param_draws, arma::mat y_star_m_1, arma::mat y_star_m_2, arma::mat y_star_m_3, arma::uvec judge_start_inds, arma::uvec judge_end_inds, arma::uvec case_years, arma::umat case_judge_years_ind_m, arma::uvec judge_year_v, int alpha_v_1_start_ind, int alpha_v_2_start_ind, int delta_v_1_start_ind, int delta_v_2_start_ind, int rho_ind, arma::vec alpha_mean_v, arma::mat alpha_cov_s, arma::vec delta_mean_v, arma::mat delta_cov_s, double rho_mean, double rho_sigma, double rho_sd, double nu, int num_iter, int start_iter, int keep_iter, double flip_rate, arma::uvec pos_judge_ind, arma::uvec neg_judge_ind, arma::uvec pos_judge_year, arma::uvec neg_judge_year, bool verbose);
+RcppExport SEXP _pumBayes_sample_probit_dynamic_rcpp(SEXP vote_mSEXP, SEXP all_param_drawsSEXP, SEXP y_star_m_1SEXP, SEXP y_star_m_2SEXP, SEXP y_star_m_3SEXP, SEXP judge_start_indsSEXP, SEXP judge_end_indsSEXP, SEXP case_yearsSEXP, SEXP case_judge_years_ind_mSEXP, SEXP judge_year_vSEXP, SEXP alpha_v_1_start_indSEXP, SEXP alpha_v_2_start_indSEXP, SEXP delta_v_1_start_indSEXP, SEXP delta_v_2_start_indSEXP, SEXP rho_indSEXP, SEXP alpha_mean_vSEXP, SEXP alpha_cov_sSEXP, SEXP delta_mean_vSEXP, SEXP delta_cov_sSEXP, SEXP rho_meanSEXP, SEXP rho_sigmaSEXP, SEXP rho_sdSEXP, SEXP nuSEXP, SEXP num_iterSEXP, SEXP start_iterSEXP, SEXP keep_iterSEXP, SEXP flip_rateSEXP, SEXP pos_judge_indSEXP, SEXP neg_judge_indSEXP, SEXP pos_judge_yearSEXP, SEXP neg_judge_yearSEXP, SEXP verboseSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
@@ -133,7 +134,8 @@ BEGIN_RCPP
     Rcpp::traits::input_parameter< arma::uvec >::type neg_judge_ind(neg_judge_indSEXP);
     Rcpp::traits::input_parameter< arma::uvec >::type pos_judge_year(pos_judge_yearSEXP);
     Rcpp::traits::input_parameter< arma::uvec >::type neg_judge_year(neg_judge_yearSEXP);
-    rcpp_result_gen = Rcpp::wrap(sample_probit_dynamic_rcpp(vote_m, all_param_draws, y_star_m_1, y_star_m_2, y_star_m_3, judge_start_inds, judge_end_inds, case_years, case_judge_years_ind_m, judge_year_v, alpha_v_1_start_ind, alpha_v_2_start_ind, delta_v_1_start_ind, delta_v_2_start_ind, rho_ind, alpha_mean_v, alpha_cov_s, delta_mean_v, delta_cov_s, rho_mean, rho_sigma, rho_sd, nu, num_iter, start_iter, keep_iter, flip_rate, pos_judge_ind, neg_judge_ind, pos_judge_year, neg_judge_year));
+    Rcpp::traits::input_parameter< bool >::type verbose(verboseSEXP);
+    rcpp_result_gen = Rcpp::wrap(sample_probit_dynamic_rcpp(vote_m, all_param_draws, y_star_m_1, y_star_m_2, y_star_m_3, judge_start_inds, judge_end_inds, case_years, case_judge_years_ind_m, judge_year_v, alpha_v_1_start_ind, alpha_v_2_start_ind, delta_v_1_start_ind, delta_v_2_start_ind, rho_ind, alpha_mean_v, alpha_cov_s, delta_mean_v, delta_cov_s, rho_mean, rho_sigma, rho_sd, nu, num_iter, start_iter, keep_iter, flip_rate, pos_judge_ind, neg_judge_ind, pos_judge_year, neg_judge_year, verbose));
     return rcpp_result_gen;
 END_RCPP
 }
@@ -159,8 +161,8 @@ static const R_CallMethodDef CallEntries[] = {
     {"_pumBayes_bvndvec", (DL_FUNC) &_pumBayes_bvndvec, 3},
     {"_pumBayes_sample_t", (DL_FUNC) &_pumBayes_sample_t, 3},
     {"_pumBayes_truncated_t_sample", (DL_FUNC) &_pumBayes_truncated_t_sample, 4},
-    {"_pumBayes_sample_probit_static_rcpp", (DL_FUNC) &_pumBayes_sample_probit_static_rcpp, 22},
-    {"_pumBayes_sample_probit_dynamic_rcpp", (DL_FUNC) &_pumBayes_sample_probit_dynamic_rcpp, 31},
+    {"_pumBayes_sample_probit_static_rcpp", (DL_FUNC) &_pumBayes_sample_probit_static_rcpp, 23},
+    {"_pumBayes_sample_probit_dynamic_rcpp", (DL_FUNC) &_pumBayes_sample_probit_dynamic_rcpp, 32},
     {"_pumBayes_calc_waic_probit_bggum_three_utility_block_rcpp", (DL_FUNC) &_pumBayes_calc_waic_probit_bggum_three_utility_block_rcpp, 6},
     {NULL, NULL, 0}
 };

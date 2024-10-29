@@ -43,5 +43,5 @@ cal_waic_pum_static <- function(chain_run){
   rm(leg_draws)
   rm(alpha_draws)
   rm(delta_draws)
-  return(pum_waic)
+  return(sum(pum_waic))
 }

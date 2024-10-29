@@ -2,82 +2,67 @@
 % Please edit documentation in R/sample_pum_dynamic.R
 \name{sample_pum_dynamic}
 \alias{sample_pum_dynamic}
-\title{generate posterior samples from the dynamic probit unfolding model}
+\title{Generate posterior samples from the dynamic probit unfolding model}
 \usage{
 sample_pum_dynamic(
   vote_m,
   years_v,
   hyperparams,
   iter_config,
-  pos_ind_list = NULL,
-  neg_ind_list = NULL,
-  pos_ind_years_list = NULL,
-  neg_ind_years_list = NULL
+  sign_refs,
+  verbose = FALSE
 )
 }
 \arguments{
-\item{vote_m}{A vote matrix in which rows represent members and columns represent issues.
-The entries can only be 0 (indicating ”No”), 1 (indicating ”Yes”), or NA (indicating missing data).}
+\item{vote_m}{A vote matrix where rows represent members and columns represent issues.
+The entries should be 0 ("No"), 1 ("Yes"), or NA (missing data).}
 
-\item{years_v}{A time vector}
+\item{years_v}{A vector representing the time period for each vote in the model.}
 
-\item{hyperparams}{A list of hyperparameter values. beta_mean is a value for the prior mean of beta.
-beta_var is a value for the variance of beta. alpha_mean is a vector of 2 components representing the prior
-means of alpha1 and alpha2. alpha_scale is a value for the scale parameters of alpha1 and alpha2.
-delta_mean is a vector of 2 components representing the prior means of delta1 and delta2.
-delta_scale is a value for the scale parameters of delta1 and delta2. nu is a fixed value making phi follow
-Gamma(nu/2,nu/2).}
+\item{hyperparams}{A list of hyperparameter values including:
+- `beta_mean`: Prior mean of beta.
+- `beta_var`: Prior variance of beta.
+- `alpha_mean`: A vector of 2 values for the prior means of alpha1 and alpha2.
+- `alpha_scale`: Scale parameter for alpha1 and alpha2.
+- `delta_mean`: A vector of 2 values for the prior means of delta1 and delta2.
+- `delta_scale`: Scale parameter for delta1 and delta2.
+- `rho_mean`: Prior mean of the autocorrelation parameter `rho`.
+- `rho_sigma`: Standard deviation of the prior for `rho`.
+- `rho_sd`: Proposal standard deviation for `rho` in the Metropolis-Hastings step.}
 
-\item{iter_config}{A list corresponding to iteration configurations, num_iter is the total number of iterations.
-start_iter is the iteration number to start retaining data after the burn-in period. keep_iter is the interval
-at which iterations are kept for posterior samples. flip_rate is the probability of fliping signs directly in the M-H step.}
+\item{iter_config}{A list specifying the MCMC iteration configurations, including:
+- `num_iter`: Total number of iterations.
+- `start_iter`: Iteration number to start retaining samples (after burn-in).
+- `keep_iter`: Interval at which samples are retained.
+- `flip_rate`: Probability of directly flipping signs in the M-H step, rather than resampling from the priors.}
 
-\item{pos_ind_list}{Index of members set to be positive}
+\item{sign_refs}{A list containing sign constraints, including:
+- `pos_inds`: Indices of members constrained to have positive values.
+- `neg_inds`: Indices of members constrained to have negative values.
+- `pos_year_inds`: List of years corresponding to each `pos_ind`.
+- `neg_year_inds`: List of years corresponding to each `neg_ind`.}
 
-\item{neg_ind_list}{Index of members set to be negative}
-
-\item{pos_ind_years_list}{Index of corresponding years set to be positive}
-
-\item{neg_ind_years_list}{Index of corresponding years set to be negative}
-
-\item{leg_pos_init}{A vector of initial values for all the positions of legislators. The
-length of this vector should be equal to the number of iterations times the number of members}
-
-\item{alpha_pos_init}{A vector of initial values for all the alpha parameters. This vector
-should have a length of 2 times the number of iterations times the number of issues,
-as each issue has two alpha parameters.}
-
-\item{delta_pos_init}{A vector of initial values for all the delta parameters. The length
-should be 2 times the number of iterations times the number of issues}
-
-\item{y_star_m_1_init}{Matrices of initial values for the three auxiliary variables, with
-dimensions equal to the number of members by the number of issues. Same for the other two parameters.}
-
-\item{start_val}{A vector of all initial values for each parameter.}
+\item{verbose}{Logical. If `TRUE`, prints progress and additional information during the sampling process.}
 }
 \value{
-A list mainly containing:
-- `beta`: A matrix of parameter draws for beta.
-- `alpha1`: A matrix of parameter draws of alpha1.
-- `alpha2`: A matrix of parameter draws of alpha2.
-- `delta1`: A matrix of parameter draws of delta1.
-- `delta2`: A matrix of parameter draws of delta2.
-- `rho`: A vector of parameter draws of rho.
+A list containing:
+  - `beta`: A data frame of posterior samples for beta.
+  - `alpha1`: A data frame of posterior samples for alpha1.
+  - `alpha2`: A data frame of posterior samples for alpha2.
+  - `delta1`: A data frame of posterior samples for delta1.
+  - `delta2`: A data frame of posterior samples for delta2.
+  - `rho`: A data frame of posterior samples for rho.
 }
 \description{
-This function is used to get samples of all the parameters from their posterior distributions
-based on the dynamic probit unfolding model
+This function generates posterior samples for all parameters
+based on the dynamic probit unfolding model.
 }
 \examples{
 hyperparams = list(beta_mean = 0, beta_var = 1, alpha_mean = c(0, 0), alpha_scale = 5,
                     delta_mean = c(-2, 10), delta_scale = sqrt(10),
                     rho_mean = 0.9, rho_sigma = 0.04, rho_sd = 0.1)
 iter_config = list(num_iter = 100, start_iter = 0, keep_iter = 1, flip_rate = 0.1)
-pos_inds = c(39, 5)
-neg_inds = c(12, 29)
-pos_year_inds = list(1:31, 1)
-neg_year_inds = list(1:29, 1:24)
-post_samples_dy = sample_pum_dynamic(mqVotes, mqTime, hyperparams, iter_config,
-                pos_ind_list = pos_inds, pos_ind_years_list = pos_year_inds,
-                neg_ind_list = neg_inds, neg_ind_years_list = neg_year_inds)
+sign_refs = list(pos_inds = c(39, 5), neg_inds = c(12, 29),
+                 pos_year_inds = list(1:31, 1), neg_year_inds = list(1:29, 1:24))
+post_samples_dy = sample_pum_dynamic(mqVotes, mqTime, hyperparams, iter_config, sign_refs, verbose)
 }
