@@ -1,27 +1,25 @@
-#' @title generate posterior samples
-#' @description This function is used to get samples of all the parameters from their posterior distributions
-#' @param hyperparams A list of hyperparameter values. beta_mean is a value for the prior mean of beta.
-#' beta_var is a value for the variance of beta. alpha_mean is a vector of 2 components representing the prior
-#' means of alpha1 and alpha2. alpha_var is a value for the variance of alpha1 and alpha2.
-#' delta_mean is a vector of 2 components representing the prior means of delta1 and delta2.
-#' delta_var is a value for the variance of delta1 and delta2.
-#' @param n_member A value representing the number of members to be simulated
-#' @param n_issue A value representing the number of issuess to be simulated
-#' @importFrom MASS mvrnorm
-#' @importFrom truncnorm rtruncnorm
+#' @title Generate Probability Samples for Voting "Yes"
+#' @description This function generates probability samples for Voting "Yes".
+#' It uses predefined hyperparameters and simulates data based on the specified number of members (`n_leg`) and issues (`n_issue`).
+#' @param hyperparams A list of hyperparameter values:
+#'   - `beta_mean`: The prior mean of the `beta` parameter, representing legislator positions.
+#'   - `beta_var`: The prior variance of `beta`.
+#'   - `alpha_mean`: A vector of length two, specifying the prior means of the item discrimination parameters, `alpha1` and `alpha2`.
+#'   - `alpha_scale`: The scale parameter for `alpha1` and `alpha2`.
+#'   - `delta_mean`: A vector of length two, indicating the prior means of the item difficulty parameters, `delta1` and `delta2`.
+#'   - `delta_scale`: The scale parameter for `delta1` and `delta2`.
+#' @param n_leg Integer, representing the number of legislators (members) to be simulated.
+#' @param n_issue Integer, indicating the number of issues to be simulated.
 #' @importFrom Rcpp sourceCpp
 #' @useDynLib pumBayes
-#' @return A list containing:
-#' - `samples`: A list containing all sampled parameters from given distributions.
-#' - `probability`: A matrix of probabilities of voting "Yes"
-#' - `histogram`: A histogram of the density of probabilities.
+#' @return A numeric vector containing the simulated probabilities of voting "Yes" for legislators across issues.
 #' @examples
 #' hyperparams = list(beta_mean = 0, beta_var = 1, alpha_mean = c(0, 0),
 #'                    alpha_scale = 5, delta_mean = c(-2, 10),
 #'                    delta_scale = sqrt(10))
-#' tune_results = tune_hyper(hyperparams, n_member = 100, n_issue = 100)
+#' theta = tune_hyper(hyperparams, n_leg = 1000, n_issue = 1000)
 #' @export
-tune_hyper <- function(hyperparams = hyperparams, n_member, n_issue) {
+tune_hyper <- function(hyperparams = hyperparams, n_leg, n_issue) {
   samples <- matrix(0, nrow = n_issue, ncol = 4)
   for (i in 1:n_issue) {
     if (runif(1) < 0.5) {
@@ -38,14 +36,14 @@ tune_hyper <- function(hyperparams = hyperparams, n_member, n_issue) {
 
     samples[i, ] <- c(alpha_j1, alpha_j2, delta_j1, delta_j2)
   }
-  beta = rnorm(n_member,hyperparams$beta_mean, sqrt(hyperparams$beta_var))
+  beta = rnorm(n_leg,hyperparams$beta_mean, sqrt(hyperparams$beta_var))
   samples = list(beta = beta, alpha1 = samples[,1], alpha2 = samples[,2],
                  delta1 = samples[,3], delta2 = samples[,4])
-  mat <- matrix(1, nrow = n_member, ncol = n_issue)
+  mat <- matrix(1, nrow = n_leg, ncol = n_issue)
   probability = get_prob_mat(mat, samples$beta, samples$alpha1, samples$alpha2,
                          samples$delta1, samples$delta2)
   mu_string <- paste("(", paste(hyperparams$delta_mean, collapse = ", "), ")", sep = "")
-  return(prob_sample = as.vector(probability))
+  return(as.vector(probability))
 }
 
 #' @title calculate probability matrix of a given set of parameters

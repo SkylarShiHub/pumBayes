@@ -2,6 +2,7 @@
 #include <armadillo>
 #include <cmath>
 #include <Rcpp.h>
+#include <chrono>
 #include <algorithm>
 #include <RcppDist.h>
 #include <mvtnorm.h>
@@ -548,17 +549,18 @@ List sample_probit_static_rcpp(
   int delta_v_1_start_ind, int delta_v_2_start_ind,
   double leg_mean, double leg_sd, arma::vec alpha_mean_v, arma::mat alpha_cov_s, 
   arma::vec delta_mean_v, arma::mat delta_cov_s, double nu, int num_iter, int start_iter,
-  int keep_iter, double flip_rate, int pos_ind) {
+  int keep_iter, double flip_rate, int pos_ind, bool verbose) {
 
   arma::vec acceptsum = zeros<vec>(vote_m.n_cols);  
   arma::vec current_param_val_v = all_param_draws.row(0).t(); // take the first row (initial values) and transpose
   arma::vec z_v = ones<vec>(vote_m.n_cols);
   // arma::vec z_v = sign(all_param_draws.row(0).subvec(alpha_v_1_start_ind, alpha_v_1_start_ind + vote_m.n_cols - 1));
-
+  if (verbose) {
+    Rcout << "Running MCMC" << "\n";
+  }
+  auto start_time = std::chrono::steady_clock::now();
+  int report_frequency = 500;
   for (int i = 0; i < num_iter; i++) {
-    if (i % 100 == 0) {
-      Rcout << i << "\n";
-    }
 
     // sample y_star
     for (int k = 0; k < vote_m.n_rows; k++) {
@@ -759,6 +761,19 @@ List sample_probit_static_rcpp(
       int keep_iter_ind = post_burn_i / keep_iter - 1;
       all_param_draws.row(keep_iter_ind) = current_param_val_v.t();
     }
+    
+    // verbose
+    if (verbose && (i % report_frequency == 0) && i > 0) {
+      auto current_time = std::chrono::steady_clock::now();
+      auto elapsed_time = std::chrono::duration_cast<std::chrono::seconds>(current_time - start_time).count();
+      double percentage = static_cast<double>(i) / num_iter * 100;
+      double time_per_iter = elapsed_time / static_cast<double>(i);
+      double remaining_time = time_per_iter * (num_iter - i);
+
+      Rcout << "Current iteration: " << i << " / " << num_iter << "\n";
+      Rcout << "Progress: " << round(percentage) << "%\n";
+      Rcout << "Estimated remaining time: " << round(remaining_time / 60.0) << " minutes\n";
+    }
   }
 
   return List::create(Named("param_draws") = all_param_draws,
@@ -780,17 +795,19 @@ List sample_probit_dynamic_rcpp(
     arma::vec alpha_mean_v, arma::mat alpha_cov_s, arma::vec delta_mean_v, arma::mat delta_cov_s,
     double rho_mean,double rho_sigma, double rho_sd, double nu, int num_iter, int start_iter,
     int keep_iter, double flip_rate, arma::uvec pos_judge_ind, arma::uvec neg_judge_ind,
-    arma::uvec pos_judge_year, arma::uvec neg_judge_year) {
+    arma::uvec pos_judge_year, arma::uvec neg_judge_year, bool verbose) {
 
   arma::vec acceptsum = zeros<vec>(vote_m.n_cols);
   arma::vec current_param_val_v = all_param_draws.row(0).t();
   arma::vec z_v = ones<vec>(vote_m.n_cols);
-  
-  for (int i = 0; i < num_iter; i++) {
-    if (i % 100 == 0) {
-      Rcout << i << "\n";
-    }
 
+  if (verbose) {
+    Rcout << "Running MCMC" << "\n";
+  }
+  auto start_time = std::chrono::steady_clock::now();
+  int report_frequency = 500;
+
+  for (int i = 0; i < num_iter; i++) {
     // sample y*
     for (int j = 0; j < vote_m.n_rows; j++) {
       for (int k = 0; k < vote_m.n_cols; k++) {
@@ -1026,7 +1043,21 @@ List sample_probit_dynamic_rcpp(
       int keep_iter_ind = post_burn_i / keep_iter - 1;
       all_param_draws.row(keep_iter_ind) = current_param_val_v.t();
     }
+
+    // verbose
+    if (verbose && (i % report_frequency == 0) && i > 0) {
+      auto current_time = std::chrono::steady_clock::now();
+      auto elapsed_time = std::chrono::duration_cast<std::chrono::seconds>(current_time - start_time).count();
+      double percentage = static_cast<double>(i) / num_iter * 100;
+      double time_per_iter = elapsed_time / static_cast<double>(i);
+      double remaining_time = time_per_iter * (num_iter - i);
+
+      Rcout << "Current iteration: " << i << " / " << num_iter << "\n";
+      Rcout << "Progress: " << round(percentage) << "%\n";
+      Rcout << "Estimated remaining time: " << round(remaining_time / 60.0) << " minutes\n";
+    }
   }
+  
 
   return(List::create(Named("param_draws") = all_param_draws,
                       Named("y_star_m_1") = y_star_m_1,
@@ -1104,53 +1135,7 @@ arma::vec calc_waic_probit_bggum_three_utility(
 }
 
 
-arma::vec calc_waic_probit_bggum_three_utility_block(
-    arma::mat leg_ideology, arma::mat alpha_m, arma::mat delta_m,
-    arma::mat case_vote_m, arma::uvec case_year, arma::mat block_m) {
-
-  arma::vec mean_prob(block_m.n_rows);
-  mean_prob.fill(-datum::inf);
-  arma::vec mean_log_prob(block_m.n_rows, fill::zeros);
-  arma::vec log_prob_var(block_m.n_rows, fill::zeros);
-  for (int iter = 0; iter < leg_ideology.n_rows; iter++) {
-    Rcout << iter << endl;
-    for (int ind = 0; ind < block_m.n_rows; ind++) {
-      int i = block_m(ind, 0);
-      int year = block_m(ind, 1);
-      int judge_ind = i + (year - 1) * case_vote_m.n_rows;
-      double log_prob = 0;
-      arma::uvec interested_cases = find(case_year == year);
-      for (int j : interested_cases) {
-        if (!is_finite(case_vote_m(i, j))) {
-          continue;
-        }
-        double mean_1 =
-          alpha_m(iter, 2 * j) * (
-              leg_ideology(iter, judge_ind) - delta_m(iter, 2 * j));
-        double mean_2 =
-          alpha_m(iter, 2 * j + 1) * (
-              leg_ideology(iter, judge_ind) - delta_m(iter, 2 * j + 1));
-        double yea_prob = bvnd(-mean_1 / sqrt(2), -mean_2 / sqrt(2), 0.5);
-        yea_prob = min(yea_prob, 1 - 1e-9);
-        yea_prob = max(yea_prob, 1e-9);
-        log_prob += case_vote_m(i, j) * log(yea_prob) +
-          (1 - case_vote_m(i, j)) * log(1 - yea_prob);
-      }
-      mean_prob(ind) = max(mean_prob(ind), log_prob) +
-        log(1 + exp(min(mean_prob(ind), log_prob) - max(mean_prob(ind), log_prob)));
-      double next_mean_log_prob = (iter * mean_log_prob(ind) + log_prob) / (iter + 1);
-      log_prob_var(ind) +=
-        (log_prob - mean_log_prob(ind)) * (log_prob - next_mean_log_prob);
-      mean_log_prob(ind) = next_mean_log_prob;
-    }
-  }
-  return(
-    mean_prob - log(leg_ideology.n_rows) -
-      (log_prob_var) / (leg_ideology.n_rows - 1));
-}
-
-
-// dynamic waic
+// pum waic
 // [[Rcpp::export]]
 arma::vec calc_waic_probit_bggum_three_utility_block_rcpp(
     arma::mat leg_ideology, arma::mat alpha_m, arma::mat delta_m,

@@ -1,6 +1,6 @@
 [
     {
-        "file": "E:/OneDrive/UW_Seattle/paper/Abel/probitUM/src/rtn1.cpp",
+        "file": "E:/OneDrive/UW_Seattle/paper/Abel/pumBayes/src/rtn1.cpp",
         "file_last_write": 1709704165.0,
         "definitions": [
             {
@@ -8,7 +8,7 @@
                 "kind": 6,
                 "parent_name": "",
                 "name": "CheckSimple(const double, const double)",
-                "file": "E:/OneDrive/UW_Seattle/paper/Abel/probitUM/src/rtn1.cpp",
+                "file": "E:/OneDrive/UW_Seattle/paper/Abel/pumBayes/src/rtn1.cpp",
                 "line": 11,
                 "column": 13,
                 "hidden": false
@@ -18,7 +18,7 @@
                 "kind": 6,
                 "parent_name": "",
                 "name": "UseAlg1(const double, const double)",
-                "file": "E:/OneDrive/UW_Seattle/paper/Abel/probitUM/src/rtn1.cpp",
+                "file": "E:/OneDrive/UW_Seattle/paper/Abel/pumBayes/src/rtn1.cpp",
                 "line": 32,
                 "column": 15,
                 "hidden": false
@@ -28,7 +28,7 @@
                 "kind": 6,
                 "parent_name": "",
                 "name": "UseAlg2(const double)",
-                "file": "E:/OneDrive/UW_Seattle/paper/Abel/probitUM/src/rtn1.cpp",
+                "file": "E:/OneDrive/UW_Seattle/paper/Abel/pumBayes/src/rtn1.cpp",
                 "line": 64,
                 "column": 15,
                 "hidden": false
@@ -38,7 +38,7 @@
                 "kind": 6,
                 "parent_name": "",
                 "name": "UseAlg3(const double, const double)",
-                "file": "E:/OneDrive/UW_Seattle/paper/Abel/probitUM/src/rtn1.cpp",
+                "file": "E:/OneDrive/UW_Seattle/paper/Abel/pumBayes/src/rtn1.cpp",
                 "line": 106,
                 "column": 15,
                 "hidden": false
@@ -48,7 +48,7 @@
                 "kind": 6,
                 "parent_name": "",
                 "name": "rtn1(const double, const double, const double, const double)",
-                "file": "E:/OneDrive/UW_Seattle/paper/Abel/probitUM/src/rtn1.cpp",
+                "file": "E:/OneDrive/UW_Seattle/paper/Abel/pumBayes/src/rtn1.cpp",
                 "line": 163,
                 "column": 8,
                 "hidden": false
@@ -57,22 +57,22 @@
         "hidden": false
     },
     {
-        "file": "E:/OneDrive/UW_Seattle/paper/Abel/probitUM/src/rtn1.h",
+        "file": "E:/OneDrive/UW_Seattle/paper/Abel/pumBayes/src/rtn1.h",
         "file_last_write": 1709704165.0,
         "definitions": [],
         "hidden": false
     },
     {
-        "file": "E:/OneDrive/UW_Seattle/paper/Abel/probitUM/src/three_utility_probit_helper_functions.cpp",
-        "file_last_write": 1729552080.0,
+        "file": "E:/OneDrive/UW_Seattle/paper/Abel/pumBayes/src/three_utility_probit_helper_functions.cpp",
+        "file_last_write": 1729731542.0,
         "definitions": [
             {
-                "usr": "c:three_utility_probit_helper_functions.cpp@358@macro@PI",
+                "usr": "c:three_utility_probit_helper_functions.cpp@377@macro@PI",
                 "kind": 9,
                 "parent_name": "",
                 "name": "PI",
-                "file": "E:/OneDrive/UW_Seattle/paper/Abel/probitUM/src/three_utility_probit_helper_functions.cpp",
-                "line": 15,
+                "file": "E:/OneDrive/UW_Seattle/paper/Abel/pumBayes/src/three_utility_probit_helper_functions.cpp",
+                "line": 16,
                 "column": 9,
                 "hidden": false
             },
@@ -81,8 +81,8 @@
                 "kind": 6,
                 "parent_name": "",
                 "name": "create_ar_1_m(double, double, double)",
-                "file": "E:/OneDrive/UW_Seattle/paper/Abel/probitUM/src/three_utility_probit_helper_functions.cpp",
-                "line": 22,
+                "file": "E:/OneDrive/UW_Seattle/paper/Abel/pumBayes/src/three_utility_probit_helper_functions.cpp",
+                "line": 23,
                 "column": 11,
                 "hidden": false
             },
@@ -91,8 +91,8 @@
                 "kind": 6,
                 "parent_name": "",
                 "name": "create_ar_1_m_inverse(double, double, double)",
-                "file": "E:/OneDrive/UW_Seattle/paper/Abel/probitUM/src/three_utility_probit_helper_functions.cpp",
-                "line": 36,
+                "file": "E:/OneDrive/UW_Seattle/paper/Abel/pumBayes/src/three_utility_probit_helper_functions.cpp",
+                "line": 37,
                 "column": 11,
                 "hidden": false
             },
@@ -101,8 +101,8 @@
                 "kind": 6,
                 "parent_name": "",
                 "name": "logit(double)",
-                "file": "E:/OneDrive/UW_Seattle/paper/Abel/probitUM/src/three_utility_probit_helper_functions.cpp",
-                "line": 56,
+                "file": "E:/OneDrive/UW_Seattle/paper/Abel/pumBayes/src/three_utility_probit_helper_functions.cpp",
+                "line": 57,
                 "column": 8,
                 "hidden": false
             },
@@ -111,8 +111,8 @@
                 "kind": 6,
                 "parent_name": "",
                 "name": "inv_logit(double)",
-                "file": "E:/OneDrive/UW_Seattle/paper/Abel/probitUM/src/three_utility_probit_helper_functions.cpp",
-                "line": 60,
+                "file": "E:/OneDrive/UW_Seattle/paper/Abel/pumBayes/src/three_utility_probit_helper_functions.cpp",
+                "line": 61,
                 "column": 8,
                 "hidden": false
             },
@@ -121,8 +121,8 @@
                 "kind": 6,
                 "parent_name": "",
                 "name": "bvnd(double, double, double)",
-                "file": "E:/OneDrive/UW_Seattle/paper/Abel/probitUM/src/three_utility_probit_helper_functions.cpp",
-                "line": 69,
+                "file": "E:/OneDrive/UW_Seattle/paper/Abel/pumBayes/src/three_utility_probit_helper_functions.cpp",
+                "line": 70,
                 "column": 8,
                 "hidden": false
             },
@@ -131,8 +131,8 @@
                 "kind": 6,
                 "parent_name": "",
                 "name": "bvndvec(Rcpp::NumericVector, Rcpp::NumericVector, Rcpp::NumericVector)",
-                "file": "E:/OneDrive/UW_Seattle/paper/Abel/probitUM/src/three_utility_probit_helper_functions.cpp",
-                "line": 170,
+                "file": "E:/OneDrive/UW_Seattle/paper/Abel/pumBayes/src/three_utility_probit_helper_functions.cpp",
+                "line": 171,
                 "column": 15,
                 "hidden": false
             },
@@ -141,8 +141,8 @@
                 "kind": 6,
                 "parent_name": "",
                 "name": "sample_y_star_m_yea(arma::vec, double, double)",
-                "file": "E:/OneDrive/UW_Seattle/paper/Abel/probitUM/src/three_utility_probit_helper_functions.cpp",
-                "line": 271,
+                "file": "E:/OneDrive/UW_Seattle/paper/Abel/pumBayes/src/three_utility_probit_helper_functions.cpp",
+                "line": 272,
                 "column": 11,
                 "hidden": false
             },
@@ -151,8 +151,8 @@
                 "kind": 6,
                 "parent_name": "",
                 "name": "sample_y_star_m_no(arma::vec, double, double)",
-                "file": "E:/OneDrive/UW_Seattle/paper/Abel/probitUM/src/three_utility_probit_helper_functions.cpp",
-                "line": 282,
+                "file": "E:/OneDrive/UW_Seattle/paper/Abel/pumBayes/src/three_utility_probit_helper_functions.cpp",
+                "line": 283,
                 "column": 11,
                 "hidden": false
             },
@@ -161,8 +161,8 @@
                 "kind": 6,
                 "parent_name": "",
                 "name": "sample_y_star_m(arma::vec, double, double, double, double, double, double)",
-                "file": "E:/OneDrive/UW_Seattle/paper/Abel/probitUM/src/three_utility_probit_helper_functions.cpp",
-                "line": 304,
+                "file": "E:/OneDrive/UW_Seattle/paper/Abel/pumBayes/src/three_utility_probit_helper_functions.cpp",
+                "line": 305,
                 "column": 11,
                 "hidden": false
             },
@@ -171,8 +171,8 @@
                 "kind": 6,
                 "parent_name": "",
                 "name": "sample_beta(arma::rowvec, arma::rowvec, arma::rowvec, arma::rowvec, arma::rowvec, arma::rowvec, double, double)",
-                "file": "E:/OneDrive/UW_Seattle/paper/Abel/probitUM/src/three_utility_probit_helper_functions.cpp",
-                "line": 318,
+                "file": "E:/OneDrive/UW_Seattle/paper/Abel/pumBayes/src/three_utility_probit_helper_functions.cpp",
+                "line": 319,
                 "column": 8,
                 "hidden": false
             },
@@ -181,8 +181,8 @@
                 "kind": 6,
                 "parent_name": "",
                 "name": "sample_beta_gp(arma::rowvec, arma::rowvec, arma::rowvec, arma::rowvec, arma::rowvec, arma::rowvec, arma::uvec, double)",
-                "file": "E:/OneDrive/UW_Seattle/paper/Abel/probitUM/src/three_utility_probit_helper_functions.cpp",
-                "line": 334,
+                "file": "E:/OneDrive/UW_Seattle/paper/Abel/pumBayes/src/three_utility_probit_helper_functions.cpp",
+                "line": 335,
                 "column": 11,
                 "hidden": false
             },
@@ -191,8 +191,8 @@
                 "kind": 6,
                 "parent_name": "",
                 "name": "sample_phi1(arma::vec, arma::vec, arma::mat, double)",
-                "file": "E:/OneDrive/UW_Seattle/paper/Abel/probitUM/src/three_utility_probit_helper_functions.cpp",
-                "line": 356,
+                "file": "E:/OneDrive/UW_Seattle/paper/Abel/pumBayes/src/three_utility_probit_helper_functions.cpp",
+                "line": 357,
                 "column": 11,
                 "hidden": false
             },
@@ -201,8 +201,8 @@
                 "kind": 6,
                 "parent_name": "",
                 "name": "sample_alpha(arma::vec, arma::vec, arma::vec, arma::vec, arma::vec, arma::mat, arma::vec, arma::mat, double, double)",
-                "file": "E:/OneDrive/UW_Seattle/paper/Abel/probitUM/src/three_utility_probit_helper_functions.cpp",
-                "line": 370,
+                "file": "E:/OneDrive/UW_Seattle/paper/Abel/pumBayes/src/three_utility_probit_helper_functions.cpp",
+                "line": 371,
                 "column": 11,
                 "hidden": false
             },
@@ -211,8 +211,8 @@
                 "kind": 6,
                 "parent_name": "",
                 "name": "sample_phi2(arma::vec, arma::vec, arma::mat, double, double)",
-                "file": "E:/OneDrive/UW_Seattle/paper/Abel/probitUM/src/three_utility_probit_helper_functions.cpp",
-                "line": 409,
+                "file": "E:/OneDrive/UW_Seattle/paper/Abel/pumBayes/src/three_utility_probit_helper_functions.cpp",
+                "line": 410,
                 "column": 11,
                 "hidden": false
             },
@@ -221,8 +221,8 @@
                 "kind": 6,
                 "parent_name": "",
                 "name": "sample_delta(arma::vec, arma::vec, arma::vec, arma::vec, arma::vec, arma::mat, double, double)",
-                "file": "E:/OneDrive/UW_Seattle/paper/Abel/probitUM/src/three_utility_probit_helper_functions.cpp",
-                "line": 423,
+                "file": "E:/OneDrive/UW_Seattle/paper/Abel/pumBayes/src/three_utility_probit_helper_functions.cpp",
+                "line": 424,
                 "column": 11,
                 "hidden": false
             },
@@ -231,8 +231,8 @@
                 "kind": 6,
                 "parent_name": "",
                 "name": "sample_rho(double, arma::vec, arma::uvec, arma::uvec, double, double, double)",
-                "file": "E:/OneDrive/UW_Seattle/paper/Abel/probitUM/src/three_utility_probit_helper_functions.cpp",
-                "line": 451,
+                "file": "E:/OneDrive/UW_Seattle/paper/Abel/pumBayes/src/three_utility_probit_helper_functions.cpp",
+                "line": 452,
                 "column": 8,
                 "hidden": false
             },
@@ -241,8 +241,8 @@
                 "kind": 6,
                 "parent_name": "",
                 "name": "sample_t(double, double, double)",
-                "file": "E:/OneDrive/UW_Seattle/paper/Abel/probitUM/src/three_utility_probit_helper_functions.cpp",
-                "line": 481,
+                "file": "E:/OneDrive/UW_Seattle/paper/Abel/pumBayes/src/three_utility_probit_helper_functions.cpp",
+                "line": 482,
                 "column": 8,
                 "hidden": false
             },
@@ -251,8 +251,8 @@
                 "kind": 6,
                 "parent_name": "",
                 "name": "truncated_t_sample(double, double, double, bool)",
-                "file": "E:/OneDrive/UW_Seattle/paper/Abel/probitUM/src/three_utility_probit_helper_functions.cpp",
-                "line": 487,
+                "file": "E:/OneDrive/UW_Seattle/paper/Abel/pumBayes/src/three_utility_probit_helper_functions.cpp",
+                "line": 488,
                 "column": 8,
                 "hidden": false
             },
@@ -261,18 +261,18 @@
                 "kind": 6,
                 "parent_name": "",
                 "name": "adjust_all_judge_ideology(arma::vec, arma::vec, arma::uvec, arma::uvec, arma::uvec, int, int, int, int, arma::uvec, arma::uvec, arma::uvec, arma::uvec)",
-                "file": "E:/OneDrive/UW_Seattle/paper/Abel/probitUM/src/three_utility_probit_helper_functions.cpp",
-                "line": 497,
+                "file": "E:/OneDrive/UW_Seattle/paper/Abel/pumBayes/src/three_utility_probit_helper_functions.cpp",
+                "line": 498,
                 "column": 21,
                 "hidden": false
             },
             {
-                "usr": "c:@F@sample_probit_static_rcpp#$@N@arma@S@Mat>#d#S0_#S0_#S0_#S0_#I#I#I#I#I#d#d#$@N@arma@S@Col>#d#S0_#S1_#S0_#d#I#I#I#d#I#",
+                "usr": "c:@F@sample_probit_static_rcpp#$@N@arma@S@Mat>#d#S0_#S0_#S0_#S0_#I#I#I#I#I#d#d#$@N@arma@S@Col>#d#S0_#S1_#S0_#d#I#I#I#d#I#b#",
                 "kind": 6,
                 "parent_name": "",
-                "name": "sample_probit_static_rcpp(arma::mat, arma::mat, arma::mat, arma::mat, arma::mat, int, int, int, int, int, double, double, arma::vec, arma::mat, arma::vec, arma::mat, double, int, int, int, double, int)",
-                "file": "E:/OneDrive/UW_Seattle/paper/Abel/probitUM/src/three_utility_probit_helper_functions.cpp",
-                "line": 545,
+                "name": "sample_probit_static_rcpp(arma::mat, arma::mat, arma::mat, arma::mat, arma::mat, int, int, int, int, int, double, double, arma::vec, arma::mat, arma::vec, arma::mat, double, int, int, int, double, int, bool)",
+                "file": "E:/OneDrive/UW_Seattle/paper/Abel/pumBayes/src/three_utility_probit_helper_functions.cpp",
+                "line": 546,
                 "column": 6,
                 "hidden": false
             },
@@ -281,8 +281,8 @@
                 "kind": 6,
                 "parent_name": "",
                 "name": "sample_probit_dynamic_rcpp(arma::mat, arma::mat, arma::mat, arma::mat, arma::mat, arma::uvec, arma::uvec, arma::uvec, arma::umat, arma::uvec, int, int, int, int, int, arma::vec, arma::mat, arma::vec, arma::mat, double, double, double, double, int, int, int, double, arma::uvec, arma::uvec, arma::uvec, arma::uvec)",
-                "file": "E:/OneDrive/UW_Seattle/paper/Abel/probitUM/src/three_utility_probit_helper_functions.cpp",
-                "line": 774,
+                "file": "E:/OneDrive/UW_Seattle/paper/Abel/pumBayes/src/three_utility_probit_helper_functions.cpp",
+                "line": 789,
                 "column": 6,
                 "hidden": false
             },
@@ -291,8 +291,8 @@
                 "kind": 6,
                 "parent_name": "",
                 "name": "calc_probit_bggum_three_utility_post_prob_m(arma::mat, arma::mat, arma::mat, arma::mat, int)",
-                "file": "E:/OneDrive/UW_Seattle/paper/Abel/probitUM/src/three_utility_probit_helper_functions.cpp",
-                "line": 1041,
+                "file": "E:/OneDrive/UW_Seattle/paper/Abel/pumBayes/src/three_utility_probit_helper_functions.cpp",
+                "line": 1056,
                 "column": 11,
                 "hidden": false
             },
@@ -301,8 +301,8 @@
                 "kind": 6,
                 "parent_name": "",
                 "name": "calc_waic_probit_bggum_three_utility(arma::mat, arma::mat, arma::mat, arma::mat, int)",
-                "file": "E:/OneDrive/UW_Seattle/paper/Abel/probitUM/src/three_utility_probit_helper_functions.cpp",
-                "line": 1063,
+                "file": "E:/OneDrive/UW_Seattle/paper/Abel/pumBayes/src/three_utility_probit_helper_functions.cpp",
+                "line": 1078,
                 "column": 11,
                 "hidden": false
             },
@@ -311,8 +311,8 @@
                 "kind": 6,
                 "parent_name": "",
                 "name": "calc_waic_probit_bggum_three_utility_block(arma::mat, arma::mat, arma::mat, arma::mat, arma::uvec, arma::mat)",
-                "file": "E:/OneDrive/UW_Seattle/paper/Abel/probitUM/src/three_utility_probit_helper_functions.cpp",
-                "line": 1107,
+                "file": "E:/OneDrive/UW_Seattle/paper/Abel/pumBayes/src/three_utility_probit_helper_functions.cpp",
+                "line": 1122,
                 "column": 11,
                 "hidden": false
             },
@@ -321,8 +321,8 @@
                 "kind": 6,
                 "parent_name": "",
                 "name": "calc_waic_probit_bggum_three_utility_block_rcpp(arma::mat, arma::mat, arma::mat, arma::mat, arma::uvec, arma::mat)",
-                "file": "E:/OneDrive/UW_Seattle/paper/Abel/probitUM/src/three_utility_probit_helper_functions.cpp",
-                "line": 1155,
+                "file": "E:/OneDrive/UW_Seattle/paper/Abel/pumBayes/src/three_utility_probit_helper_functions.cpp",
+                "line": 1170,
                 "column": 11,
                 "hidden": false
             },
@@ -331,8 +331,8 @@
                 "kind": 6,
                 "parent_name": "",
                 "name": "calc_waic_probit_bggum_three_utility_block_vote_rcpp(arma::mat, arma::mat, arma::mat, arma::mat, arma::mat)",
-                "file": "E:/OneDrive/UW_Seattle/paper/Abel/probitUM/src/three_utility_probit_helper_functions.cpp",
-                "line": 1200,
+                "file": "E:/OneDrive/UW_Seattle/paper/Abel/pumBayes/src/three_utility_probit_helper_functions.cpp",
+                "line": 1215,
                 "column": 11,
                 "hidden": false
             },
@@ -341,8 +341,8 @@
                 "kind": 6,
                 "parent_name": "",
                 "name": "calc_waic_cpp(arma::mat, arma::mat, arma::mat, arma::mat, arma::mat, arma::mat)",
-                "file": "E:/OneDrive/UW_Seattle/paper/Abel/probitUM/src/three_utility_probit_helper_functions.cpp",
-                "line": 1244,
+                "file": "E:/OneDrive/UW_Seattle/paper/Abel/pumBayes/src/three_utility_probit_helper_functions.cpp",
+                "line": 1259,
                 "column": 11,
                 "hidden": false
             },
@@ -351,8 +351,8 @@
                 "kind": 6,
                 "parent_name": "",
                 "name": "cal_prob_cpp(Rcpp::NumericMatrix, Rcpp::List)",
-                "file": "E:/OneDrive/UW_Seattle/paper/Abel/probitUM/src/three_utility_probit_helper_functions.cpp",
-                "line": 1286,
+                "file": "E:/OneDrive/UW_Seattle/paper/Abel/pumBayes/src/three_utility_probit_helper_functions.cpp",
+                "line": 1301,
                 "column": 15,
                 "hidden": false
             }
