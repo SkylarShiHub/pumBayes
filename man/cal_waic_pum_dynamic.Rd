@@ -18,5 +18,5 @@ The entries can only be 0 (indicating ”No”), 1 (indicating ”Yes”), or NA
 This function is used to get the WAIC value of the dynamic probit unfolding model
 }
 \examples{
-waic_dy = cal_waic_pum_dynamic(mqVotes, mqTime, post_samples_dy)
+waic_pum_dy = cal_waic_pum_dynamic(mqVotes, mqTime, post_samples_pum_dy)
 }

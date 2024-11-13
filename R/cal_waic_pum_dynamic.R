@@ -7,7 +7,7 @@
 #' @importFrom Rcpp sourceCpp
 #' @useDynLib pumBayes
 #' @examples
-#' waic_dy = cal_waic_pum_dynamic(mqVotes, mqTime, post_samples_dy)
+#' waic_pum_dy = cal_waic_pum_dynamic(mqVotes, mqTime, post_samples_pum_dy)
 #' @export
 cal_waic_pum_dynamic = function(vote_m, years_v, chain_run){
   block_m <- do.call(rbind, lapply(1:nrow(vote_m), function(i) {
@@ -28,5 +28,5 @@ cal_waic_pum_dynamic = function(vote_m, years_v, chain_run){
   dynamic_pum_waic_corrseed <- calc_waic_probit_bggum_three_utility_block_rcpp(
     leg_pos[, -grep("RHJackson_beta_9", colnames(leg_pos))], alpha_draws,
     delta_draws, mqVotes, mqTime, block_m)
-  return(sum(dynamic_pum_waic_corrseed))
+  return(-2*dynamic_pum_waic_corrseed)
 }

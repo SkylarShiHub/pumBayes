@@ -110,5 +110,5 @@ cal_waic_ideal <- function(
       mean_log_prob <- mean_log_prob + delta / num_iter
       log_prob_var <- log_prob_var + delta * (log_prob - mean_log_prob)
     }
-  return(sum(mean_prob - log(num_iter) - (log_prob_var) / (num_iter - 1)))
+  return(-2*sum(mean_prob - log(num_iter) - (log_prob_var) / (num_iter - 1)))
 }

@@ -4,9 +4,11 @@
 \alias{post_rank}
 \title{Generate Quantile Ranks for Legislators}
 \usage{
-post_rank(beta, quantiles = c(0.5))
+post_rank(vote_info, beta, quantiles = c(0.5))
 }
 \arguments{
+\item{vote_info}{The same vote object used for getting posterior samples.}
+
 \item{beta}{A matrix of posterior samples of beta obtained from MCMC, with columns representing legislators.}
 
 \item{quantiles}{A numeric vector specifying the quantiles to be calculated for the ranks (default is `c(0.5)` for median rank).}
@@ -20,5 +22,5 @@ This function calculates quantile ranks for each legislator based on posterior s
 The function can handle any specified quantiles, such as median (0.5), and is flexible to support other quantiles provided as input.
 }
 \examples{
-rank_results = post_rank(beta = post_samples_pum$beta, quantiles = c(0.5))
+rank_results = post_rank(vote_info = h116.c, beta = post_samples_pum$beta, quantiles = c(0.5))
 }

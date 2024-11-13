@@ -6,22 +6,14 @@
 \usage{
 sample_pum_static(
   vote_info,
-  data_process = list(leg_rm = NULL, combine_leg_name = NULL, combine_leg_party = NULL,
-    lop_leg = 0.6, lop_issue = 0),
   hyperparams,
   iter_config,
-  pos_leg = "SCALISE",
+  pos_leg = 0,
   verbose = FALSE
 )
 }
 \arguments{
 \item{vote_info}{A vote matrix (or a rollcall object) in which rows represent members and columns represent issues.}
-
-\item{data_process}{A list of parameters for data preprocessing:
-- `leg_rm`: A list of legislators to be removed.
-- `combine_leg_name` and `combine_leg_party`: Vectors for merging legislators' votes by name and party.
-- `lop_leg`: The proportion of missing votes that warrants removing a legislator.
-- `lop_issue`: The threshold of minority votes below which an issue will be excluded.}
 
 \item{hyperparams}{A list of hyperparameter values:
 - `beta_mean`: Prior mean for beta.
@@ -57,8 +49,7 @@ This function generates posterior samples of all parameters based on the static 
 hyperparams <- list(beta_mean = 0, beta_var = 1, alpha_mean = c(0, 0),
                     alpha_scale = 5, delta_mean = c(-2, 10), delta_scale = sqrt(10))
 iter_config <- list(num_iter = 10, start_iter = 0, keep_iter = 1, flip_rate = 0.1)
-data_process <- list(leg_rm = NULL, combine_leg_name = NULL, combine_leg_party = NULL,
-                     lop_leg = 0.6, lop_issue = 0)
-post_samples <- sample_pum_static(house_votes_m, data_process, hyperparams,
-                                  iter_config, pos_leg = "SCALISE", verbose = FALSE)
+post_samples <- sample_pum_static(h116.c, hyperparams,
+                                  iter_config, pos_leg = grep("SCALISE", rownames(h116.c$votes)),
+                                  verbose = FALSE)
 }
