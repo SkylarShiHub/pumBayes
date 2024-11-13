@@ -12,11 +12,7 @@
 #'   }
 #' @return A rollcall object that has been processed
 #' @examples
-<<<<<<< HEAD
-#' load("data/h116.rda")
-=======
->>>>>>> 26501ac (update)
-#' h116.c = preprocess_rollcall(h116)
+#' h116.clean = preprocess_rollcall(h116)
 #' @export
 preprocess_rollcall <- function(x, data_preprocess=list(leg_rm = NULL, combine_leg_index = NULL,
                                                         combine_leg_party = NULL,

@@ -30,6 +30,5 @@ This function is used to preprocess roll call data for analysis.
 It allows users to remove legislators, combine legislators with specified indices, exclude lopsided votes based on minority voting proportions, and filter out legislators with excessive missing votes.
 }
 \examples{
-load("data/h116.rda")
-h116.c = preprocess_rollcall(h116)
+h116.clean = preprocess_rollcall(h116)
 }
