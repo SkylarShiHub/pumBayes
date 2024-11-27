@@ -1,6 +1,6 @@
 #' @title Generate posterior samples from the static probit unfolding model
 #' @description This function generates posterior samples of all parameters based on the static probit unfolding model.
-#' @param vote_info A vote matrix (or a rollcall object) in which rows represent members and columns represent issues.
+#' @param vote_info A logical vote matrix (or a rollcall object) in which rows represent members and columns represent issues.
 #' @param hyperparams A list of hyperparameter values:
 #'   - `beta_mean`: Prior mean for beta.
 #'   - `beta_var`: Variance of beta.
@@ -8,7 +8,7 @@
 #'   - `alpha_scale`: Scale parameter for `alpha1` and `alpha2`.
 #'   - `delta_mean`: A vector of two components representing the prior means of `delta1` and `delta2`.
 #'   - `delta_scale`: Scale parameter for `delta1` and `delta2`.
-#' @param iter_config A list of iteration configurations:
+#' @param control A list of MCMC configurations:
 #'   - `num_iter`: Total number of iterations. It is recommended to set this to at least 30,000 to ensure reliable results.
 #'   - `start_iter`: Iteration number to start retaining data after burn-in.
 #'   - `keep_iter`: Interval at which iterations are kept for posterior samples.
@@ -27,12 +27,12 @@
 #' @examples
 #' hyperparams <- list(beta_mean = 0, beta_var = 1, alpha_mean = c(0, 0),
 #'                     alpha_scale = 5, delta_mean = c(-2, 10), delta_scale = sqrt(10))
-#' iter_config <- list(num_iter = 10, start_iter = 0, keep_iter = 1, flip_rate = 0.1)
+#' control <- list(num_iter = 10, start_iter = 0, keep_iter = 1, flip_rate = 0.1)
 #' post_samples <- sample_pum_static(h116.c, hyperparams,
-#'                                   iter_config, pos_leg = grep("SCALISE", rownames(h116.c$votes)),
+#'                                   control, pos_leg = grep("SCALISE", rownames(h116.c$votes)),
 #'                                   verbose = FALSE)
 #' @export
-sample_pum_static <- function(vote_info, hyperparams, iter_config,
+sample_pum_static <- function(vote_info, hyperparams, control,
                               pos_leg = 0, verbose = FALSE) {
 
   # 1. Check and process input vote object
@@ -84,7 +84,7 @@ sample_pum_static <- function(vote_info, hyperparams, iter_config,
   # # output
   vote_out = vote_m
 
-  total_iter = (iter_config$num_iter - iter_config$start_iter) %/% iter_config$keep_iter
+  total_iter = (control$num_iter - control$start_iter) %/% control$keep_iter
   init_info <- init_data_rcpp(
     vote_m, leg_pos_init = NULL, alpha_pos_init = NULL,
     delta_pos_init = NULL, y_star_m_1_init = NULL, y_star_m_2_init = NULL,
@@ -97,7 +97,7 @@ sample_pum_static <- function(vote_info, hyperparams, iter_config,
     init_info[[8]], init_info[[9]], hyperparams$beta_mean, sqrt(hyperparams$beta_var),
     hyperparams$alpha_mean, diag(2) * (hyperparams$alpha_scale^2),
     hyperparams$delta_mean, diag(2) * (hyperparams$delta_scale^2), 10000000,
-    iter_config$num_iter, iter_config$start_iter, iter_config$keep_iter, iter_config$flip_rate,
+    control$num_iter, control$start_iter, control$keep_iter, control$flip_rate,
     pos_ind - 1, verbose)
 
   all_param_draw = draw_info[[1]]

@@ -3,6 +3,7 @@
 #' curve for a specific issue based on posterior samples.
 #' @param vote_num The vote number of the issue to be reviewed. This refers to numbers
 #' in the column names of the input vote matrix, not the clerk session vote number.
+#' @param x A vector showing the range of beta in the x axis.
 #' @param post_samples A list of posterior samples of parameters obtained from `sample_pum_static` in `pumBayes`.
 #' @importFrom Rcpp sourceCpp
 #' @useDynLib pumBayes
@@ -12,7 +13,7 @@
 #' @examples
 #' item_data <- item_char(vote_num = 5, post_samples = post_samples_pum)
 #' @export
-item_char = function(vote_num, post_samples){
+item_char = function(vote_num, x = NULL, post_samples){
   beta = as.matrix(post_samples$beta)
   alpha1 = as.matrix(post_samples$alpha1)
   alpha2 = as.matrix(post_samples$alpha2)
@@ -20,7 +21,17 @@ item_char = function(vote_num, post_samples){
   delta2 = as.matrix(post_samples$delta2)
 
   col_index <- grep(paste0("(^|\\s)", vote_num , "_"), colnames(alpha1))
-  beta_samples = seq(min(beta), max(beta), length.out = 500)
+
+  if (!is.null(x) && (!is.numeric(x) || length(x) == 0)) {
+    stop("Error: 'x' must be a numeric vector or NULL.")
+  }
+
+  if (is.null(x)) {
+    beta_samples = seq(min(beta), max(beta), length.out = 500)
+  } else {
+    beta_samples = seq(min(x), max(x), length.out = 500)
+  }
+
   prob_mat = matrix(nrow = nrow(alpha1), ncol = length(beta_samples))
 
   for (i in (1:length(beta_samples))){

@@ -1,8 +1,7 @@
 #' @title Generate posterior samples from the dynamic probit unfolding model
-#' @description This function generates posterior samples for all parameters
-#' based on the dynamic probit unfolding model.
-#' @param vote_m A vote matrix where rows represent members and columns represent issues.
-#' The entries should be 0 ("No"), 1 ("Yes"), or NA (missing data).
+#' @description This function generates posterior samples for all parameters based on the dynamic probit unfolding model.
+#' @param vote_m A logical vote matrix where rows represent members and columns represent issues.
+#' The entries should be FALSE ("No"), TRUE ("Yes"), or NA (missing data).
 #' @param years_v A vector representing the time period for each vote in the model.
 #' @param hyperparams A list of hyperparameter values including:
 #'   - `beta_mean`: Prior mean of beta.
@@ -13,12 +12,12 @@
 #'   - `delta_scale`: Scale parameter for delta1 and delta2.
 #'   - `rho_mean`: Prior mean of the autocorrelation parameter `rho`.
 #'   - `rho_sigma`: Standard deviation of the prior for `rho`.
-#'   - `rho_sd`: Proposal standard deviation for `rho` in the Metropolis-Hastings step.
-#' @param iter_config A list specifying the MCMC iteration configurations, including:
+#' @param control A list specifying the MCMC configurations, including:
 #'   - `num_iter`: Total number of iterations.
 #'   - `start_iter`: Iteration number to start retaining samples (after burn-in).
 #'   - `keep_iter`: Interval at which samples are retained.
 #'   - `flip_rate`: Probability of directly flipping signs in the M-H step, rather than resampling from the priors.
+#'   - `sd_prop_rho`: Proposal standard deviation for `rho` in the Metropolis-Hastings step.
 #' @param sign_refs A list containing sign constraints, including:
 #'   - `pos_inds`: Indices of members constrained to have positive values.
 #'   - `neg_inds`: Indices of members constrained to have negative values.
@@ -37,16 +36,46 @@
 #' @examples
 #' hyperparams = list(beta_mean = 0, beta_var = 1, alpha_mean = c(0, 0), alpha_scale = 5,
 #'                     delta_mean = c(-2, 10), delta_scale = sqrt(10),
-#'                     rho_mean = 0.9, rho_sigma = 0.04, rho_sd = 0.1)
-#' iter_config = list(num_iter = 100, start_iter = 0, keep_iter = 1, flip_rate = 0.1)
+#'                     rho_mean = 0.9, rho_sigma = 0.04)
+#' control = list(num_iter = 100, start_iter = 0, keep_iter = 1, flip_rate = 0.1, sd_prop_rho = 0.1)
 #' sign_refs = list(pos_inds = c(39, 5), neg_inds = c(12, 29),
 #'                  pos_year_inds = list(1:31, 1), neg_year_inds = list(1:29, 1:24))
-#' post_samples_dy = sample_pum_dynamic(mqVotes, mqTime, hyperparams, iter_config, sign_refs, verbose = FALSE)
+#' post_samples_dy = sample_pum_dynamic(mqVotes, mqTime, hyperparams, control, sign_refs, verbose = FALSE)
 #' @export
 sample_pum_dynamic <- function(
-    vote_m, years_v, hyperparams, iter_config, sign_refs, verbose = FALSE) {
+    vote_info, years_v, hyperparams, control, sign_refs, verbose = FALSE) {
 
-  total_iter = (iter_config$num_iter - iter_config$start_iter) %/% iter_config$keep_iter
+  # check inputs
+  if(!(ncol(vote_info) == length(years_v))){
+    stop("The number of columns in `vote_info` does not match the length of `years_v`.")
+  }
+
+  if (is.matrix(vote_info)) {
+
+    if (all(is.na(vote_info) | vote_info %in% c(0, 1))) {
+      vote_m <- vote_info
+    } else if (all(is.logical(vote_info))) {
+      vote_m <- vote_info
+      vote_m[vote_m == TRUE] <- 1
+      vote_m[vote_m == FALSE] <- 0
+    } else if (all(vote_info %in% c("T", "F", "NA"))) {
+      vote_m <- vote_info
+      vote_m[vote_m == "T"] <- 1
+      vote_m[vote_m == "F"] <- 0
+      vote_m[vote_m == "NA"] <- NA
+    } else {
+      invalid_values <- vote_info[!(is.na(vote_info) | vote_info %in% c(0, 1, TRUE, FALSE, "T", "F", "NA"))]
+      if (length(invalid_values) > 0) {
+        stop(paste("Invalid value found in your vote matrix:", paste(invalid_values, collapse = ", ")))
+      }
+    }
+
+  } else {
+    stop("`vote_info` should be a matrix.")
+  }
+
+
+  total_iter = (control$num_iter - control$start_iter) %/% control$keep_iter
   init_info <- init_data_gp_rcpp(
     vote_m, years_v, leg_pos_init = NULL, alpha_pos_init = NULL, delta_pos_init = NULL,
     rho_init = NULL, y_star_m_1_init = NULL, y_star_m_2_init = NULL,
@@ -62,9 +91,9 @@ sample_pum_dynamic <- function(
     init_info[[8]], init_info[[9]], init_info[[10]],
     hyperparams$alpha_mean, diag(2) * (hyperparams$alpha_scale^2),
     hyperparams$delta_mean, diag(2) * (hyperparams$delta_scale^2),
-    hyperparams$rho_mean, hyperparams$rho_sigma, hyperparams$rho_sd, 10000000,
-    iter_config$num_iter, iter_config$start_iter, iter_config$keep_iter,
-    iter_config$flip_rate, init_info[[15]], init_info[[16]],
+    hyperparams$rho_mean, hyperparams$rho_sigma, control$sd_prop_rho, 10000000,
+    control$num_iter, control$start_iter, control$keep_iter,
+    control$flip_rate, init_info[[15]], init_info[[16]],
     init_info[[17]], init_info[[18]], verbose)
 
   all_param_draw = draw_info[[1]]

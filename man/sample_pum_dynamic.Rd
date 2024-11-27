@@ -5,18 +5,15 @@
 \title{Generate posterior samples from the dynamic probit unfolding model}
 \usage{
 sample_pum_dynamic(
-  vote_m,
+  vote_info,
   years_v,
   hyperparams,
-  iter_config,
+  control,
   sign_refs,
   verbose = FALSE
 )
 }
 \arguments{
-\item{vote_m}{A vote matrix where rows represent members and columns represent issues.
-The entries should be 0 ("No"), 1 ("Yes"), or NA (missing data).}
-
 \item{years_v}{A vector representing the time period for each vote in the model.}
 
 \item{hyperparams}{A list of hyperparameter values including:
@@ -27,14 +24,14 @@ The entries should be 0 ("No"), 1 ("Yes"), or NA (missing data).}
 - `delta_mean`: A vector of 2 values for the prior means of delta1 and delta2.
 - `delta_scale`: Scale parameter for delta1 and delta2.
 - `rho_mean`: Prior mean of the autocorrelation parameter `rho`.
-- `rho_sigma`: Standard deviation of the prior for `rho`.
-- `rho_sd`: Proposal standard deviation for `rho` in the Metropolis-Hastings step.}
+- `rho_sigma`: Standard deviation of the prior for `rho`.}
 
-\item{iter_config}{A list specifying the MCMC iteration configurations, including:
+\item{control}{A list specifying the MCMC configurations, including:
 - `num_iter`: Total number of iterations.
 - `start_iter`: Iteration number to start retaining samples (after burn-in).
 - `keep_iter`: Interval at which samples are retained.
-- `flip_rate`: Probability of directly flipping signs in the M-H step, rather than resampling from the priors.}
+- `flip_rate`: Probability of directly flipping signs in the M-H step, rather than resampling from the priors.
+- `sd_prop_rho`: Proposal standard deviation for `rho` in the Metropolis-Hastings step.}
 
 \item{sign_refs}{A list containing sign constraints, including:
 - `pos_inds`: Indices of members constrained to have positive values.
@@ -43,6 +40,9 @@ The entries should be 0 ("No"), 1 ("Yes"), or NA (missing data).}
 - `neg_year_inds`: List of years corresponding to each `neg_ind`.}
 
 \item{verbose}{Logical. If `TRUE`, prints progress and additional information during the sampling process.}
+
+\item{vote_m}{A logical vote matrix where rows represent members and columns represent issues.
+The entries should be FALSE ("No"), TRUE ("Yes"), or NA (missing data).}
 }
 \value{
 A list containing:
@@ -54,15 +54,14 @@ A list containing:
   - `rho`: A data frame of posterior samples for rho.
 }
 \description{
-This function generates posterior samples for all parameters
-based on the dynamic probit unfolding model.
+This function generates posterior samples for all parameters based on the dynamic probit unfolding model.
 }
 \examples{
 hyperparams = list(beta_mean = 0, beta_var = 1, alpha_mean = c(0, 0), alpha_scale = 5,
                     delta_mean = c(-2, 10), delta_scale = sqrt(10),
-                    rho_mean = 0.9, rho_sigma = 0.04, rho_sd = 0.1)
-iter_config = list(num_iter = 100, start_iter = 0, keep_iter = 1, flip_rate = 0.1)
+                    rho_mean = 0.9, rho_sigma = 0.04)
+control = list(num_iter = 100, start_iter = 0, keep_iter = 1, flip_rate = 0.1, sd_prop_rho = 0.1)
 sign_refs = list(pos_inds = c(39, 5), neg_inds = c(12, 29),
                  pos_year_inds = list(1:31, 1), neg_year_inds = list(1:29, 1:24))
-post_samples_dy = sample_pum_dynamic(mqVotes, mqTime, hyperparams, iter_config, sign_refs, verbose = FALSE)
+post_samples_dy = sample_pum_dynamic(mqVotes, mqTime, hyperparams, control, sign_refs, verbose = FALSE)
 }

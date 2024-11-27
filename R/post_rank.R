@@ -12,7 +12,7 @@
 
 post_rank = function(vote_info, beta, quantiles = c(0.5)){
 
-  rank_matrix <- apply(beta, 1, function(x) rank(-x)) # Descending ranking
+  rank_matrix <- apply(beta, 1, function(x) rank(x)) # Descending ranking
   rank_matrix <- t(rank_matrix)
 
   rank_quantiles <- apply(rank_matrix, 2, function(x) {

@@ -4,11 +4,13 @@
 \alias{item_char}
 \title{Generate Data for Item Characteristic Curves}
 \usage{
-item_char(vote_num, post_samples)
+item_char(vote_num, x = NULL, post_samples)
 }
 \arguments{
 \item{vote_num}{The vote number of the issue to be reviewed. This refers to numbers
 in the column names of the input vote matrix, not the clerk session vote number.}
+
+\item{x}{A vector showing the range of beta in the x axis.}
 
 \item{post_samples}{A list of posterior samples of parameters obtained from `sample_pum_static` in `pumBayes`.}
 }
