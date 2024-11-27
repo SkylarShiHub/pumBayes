@@ -1,11 +1,11 @@
 ---
 title: "pumBayes`:` Bayesian Estimation of Probit Unfolding Models for Binary Preference Data"
 author: "Skylar Shi, Abel Rodriguez and Rayleigh Lei"
-output:
-  html_document:
-    df_print: paged
-  pdf_document:
-    latex_engine: xelatex
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{Vignette}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
 bibliography: my_refs.bib
 csl: biometrics.csl
 header-includes:

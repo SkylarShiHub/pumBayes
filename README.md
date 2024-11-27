@@ -7,6 +7,7 @@
 ### Installation
 
 You can install the latest version of **pumBayes** directly from GitHub using the following commands:
+
 ```R
 # Install devtools package if not already installed
 install.packages("devtools")
@@ -15,3 +16,7 @@ install.packages("devtools")
 library(devtools)
 install_github("SkylarShiHub/pumBayes")
 ```
+
+### Documents
+
+For more detailed usage instructions, please refer to the **vignette** (https://SkylarShiHub.github.io/pumBayes/articles/vignettes.html).

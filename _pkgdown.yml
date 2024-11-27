@@ -3,6 +3,6 @@ template:
   bootstrap: 5
 
 articles:
-  - title: "Vignettes"
+  - title: "Vignette"
     contents:
-      - file: vignettes/vignettes.Rmd
+      - vignettes
