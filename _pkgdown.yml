@@ -2,3 +2,7 @@ url: ~
 template:
   bootstrap: 5
 
+articles:
+  - title: "Vignettes"
+    contents:
+      - file: vignettes/vignettes.Rmd

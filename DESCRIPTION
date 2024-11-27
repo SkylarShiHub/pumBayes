@@ -1,6 +1,6 @@
 Package: pumBayes
 Type: Package
-Title: Bayesian Probit Unfolding Models for Binary Preference Data
+Title: Bayesian Estimation of Probit Unfolding Models
 Version: 0.1.0
 Author: Skylar Shi
 Maintainer: Skylar Shi <dshi98@uw.edu>

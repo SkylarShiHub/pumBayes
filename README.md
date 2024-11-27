@@ -1,7 +1,17 @@
-\textbf{pumBayes} is an R package designed for Bayesian analysis of probit unfolding models (PUM) for binary preference data. You can install the latest version of \textbf{pumBayes} directly from GitHub using the following commands:
+## Bayesian Estimation of Probit Unfolding Models
+
+### Description
+
+**pumBayes** is an R package designed for Bayesian estimation of probit unfolding models (PUM) for binary preference data. 
+
+### Installation
+
+You can install the latest version of **pumBayes** directly from GitHub using the following commands:
 ```R
-# Install remotes package if not already installed
-install.packages("remotes")
+# Install devtools package if not already installed
+install.packages("devtools")
 
 # Install pumBayes from GitHub
-remotes::install_github("SkylarShiHub/pumBayes")
+library(devtools)
+install_github("SkylarShiHub/pumBayes")
+```
