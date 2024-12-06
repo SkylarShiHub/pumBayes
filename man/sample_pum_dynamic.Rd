@@ -10,7 +10,9 @@ sample_pum_dynamic(
   hyperparams,
   control,
   sign_refs,
-  verbose = FALSE
+  verbose = FALSE,
+  pre_run = NULL,
+  appended = FALSE
 )
 }
 \arguments{
@@ -41,6 +43,10 @@ sample_pum_dynamic(
 
 \item{verbose}{Logical. If `TRUE`, prints progress and additional information during the sampling process.}
 
+\item{pre_run}{A list containing the output from a previous run of the function. If provided, the last iteration of the previous run will be used as the initial point of the new run. Defaults to `NULL`.}
+
+\item{appended}{Logical. If `TRUE`, the new samples will be appended to the samples from the previous run. Defaults to `FALSE`.}
+
 \item{vote_m}{A logical vote matrix where rows represent members and columns represent issues.
 The entries should be FALSE ("No"), TRUE ("Yes"), or NA (missing data).}
 }
@@ -63,5 +69,6 @@ hyperparams = list(beta_mean = 0, beta_var = 1, alpha_mean = c(0, 0), alpha_scal
 control = list(num_iter = 100, start_iter = 0, keep_iter = 1, flip_rate = 0.1, sd_prop_rho = 0.1)
 sign_refs = list(pos_inds = c(39, 5), neg_inds = c(12, 29),
                  pos_year_inds = list(1:31, 1), neg_year_inds = list(1:29, 1:24))
-post_samples_dy = sample_pum_dynamic(mqVotes, mqTime, hyperparams, control, sign_refs, verbose = FALSE)
+post_samples_dy = sample_pum_dynamic(mqVotes, mqTime, hyperparams, control, sign_refs,
+verbose = FALSE, pre_run = NULL, appended = FALSE)
 }

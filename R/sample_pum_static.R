@@ -15,6 +15,8 @@
 #'   - `flip_rate`: Probability of directly flipping signs in the M-H step, rather than resampling from the priors.
 #' @param pos_leg Name of the legislator whose position is kept positive.
 #' @param verbose Logical. If `TRUE`, prints progress and additional information during the sampling process.
+#' @param pre_run A list containing the output from a previous run of the function. If provided, the last iteration of the previous run will be used as the initial point of the new run. Defaults to `NULL`.
+#' @param appended Logical. If `TRUE`, the new samples will be appended to the samples from the previous run. Defaults to `FALSE`.
 #' @importFrom Rcpp sourceCpp
 #' @useDynLib pumBayes
 #' @return A list primarily containing:
@@ -23,17 +25,17 @@
 #'   - `alpha2`: A matrix of posterior samples for `alpha2`.
 #'   - `delta1`: A matrix of posterior samples for `delta1`.
 #'   - `delta2`: A matrix of posterior samples for `delta2`.
-#'   - `vote_info`: The vote object after data preprocessing.
+#'   - `vote_info`: The input vote object.
 #' @examples
 #' hyperparams <- list(beta_mean = 0, beta_var = 1, alpha_mean = c(0, 0),
 #'                     alpha_scale = 5, delta_mean = c(-2, 10), delta_scale = sqrt(10))
 #' control <- list(num_iter = 10, start_iter = 0, keep_iter = 1, flip_rate = 0.1)
 #' post_samples <- sample_pum_static(h116.c, hyperparams,
 #'                                   control, pos_leg = grep("SCALISE", rownames(h116.c$votes)),
-#'                                   verbose = FALSE)
+#'                                   verbose = FALSE, pre_run = NULL, appended = FALSE)
 #' @export
 sample_pum_static <- function(vote_info, hyperparams, control,
-                              pos_leg = 0, verbose = FALSE) {
+                              pos_leg = 0, verbose = FALSE, pre_run = NULL, appended = FALSE) {
 
   # 1. Check and process input vote object
   if (is.matrix(vote_info)) {
@@ -85,10 +87,24 @@ sample_pum_static <- function(vote_info, hyperparams, control,
   vote_out = vote_m
 
   total_iter = (control$num_iter - control$start_iter) %/% control$keep_iter
-  init_info <- init_data_rcpp(
-    vote_m, leg_pos_init = NULL, alpha_pos_init = NULL,
-    delta_pos_init = NULL, y_star_m_1_init = NULL, y_star_m_2_init = NULL,
-    y_star_m_3_init = NULL, total_iter)
+  # Initialize parameters from previous run or default
+  if (!is.null(pre_run)) {
+    init_info <- init_data_rcpp(
+      vote_m,
+      leg_pos_init = tail(pre_run$beta, 1),
+      alpha_pos_init = cbind(tail(pre_run$alpha1, 1), tail(pre_run$alpha2, 1)),
+      delta_pos_init = cbind(tail(pre_run$delta1, 1), tail(pre_run$delta2, 1)),
+      y_star_m_1_init = NULL,
+      y_star_m_2_init = NULL,
+      y_star_m_3_init = NULL,
+      total_iter)
+  } else {
+    init_info <- init_data_rcpp(
+      vote_m, leg_pos_init = NULL, alpha_pos_init = NULL, delta_pos_init = NULL,
+      y_star_m_1_init = NULL, y_star_m_2_init = NULL, y_star_m_3_init = NULL,
+      total_iter)
+  }
+
 
   # c++
   draw_info <- sample_probit_static_rcpp(
@@ -127,6 +143,15 @@ sample_pum_static <- function(vote_info, hyperparams, control,
   alpha2_list <- as.data.frame(all_param_draw[, alpha_vote_names_2])
   delta1_list <- as.data.frame(all_param_draw[, delta_vote_names_1])
   delta2_list <- as.data.frame(all_param_draw[, delta_vote_names_2])
+
+  # Append samples if required
+  if (!is.null(pre_run) && appended) {
+    beta_list <- rbind(pre_run$beta, beta_list)
+    alpha1_list <- rbind(pre_run$alpha1, alpha1_list)
+    alpha2_list <- rbind(pre_run$alpha2, alpha2_list)
+    delta1_list <- rbind(pre_run$delta1, delta1_list)
+    delta2_list <- rbind(pre_run$delta2, delta2_list)
+  }
 
   return(list(
     beta = beta_list,

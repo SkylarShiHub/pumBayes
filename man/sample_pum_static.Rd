@@ -9,7 +9,9 @@ sample_pum_static(
   hyperparams,
   control,
   pos_leg = 0,
-  verbose = FALSE
+  verbose = FALSE,
+  pre_run = NULL,
+  appended = FALSE
 )
 }
 \arguments{
@@ -32,6 +34,10 @@ sample_pum_static(
 \item{pos_leg}{Name of the legislator whose position is kept positive.}
 
 \item{verbose}{Logical. If `TRUE`, prints progress and additional information during the sampling process.}
+
+\item{pre_run}{A list containing the output from a previous run of the function. If provided, the last iteration of the previous run will be used as the initial point of the new run. Defaults to `NULL`.}
+
+\item{appended}{Logical. If `TRUE`, the new samples will be appended to the samples from the previous run. Defaults to `FALSE`.}
 }
 \value{
 A list primarily containing:
@@ -40,7 +46,7 @@ A list primarily containing:
   - `alpha2`: A matrix of posterior samples for `alpha2`.
   - `delta1`: A matrix of posterior samples for `delta1`.
   - `delta2`: A matrix of posterior samples for `delta2`.
-  - `vote_info`: The vote object after data preprocessing.
+  - `vote_info`: The input vote object.
 }
 \description{
 This function generates posterior samples of all parameters based on the static probit unfolding model.
@@ -51,5 +57,5 @@ hyperparams <- list(beta_mean = 0, beta_var = 1, alpha_mean = c(0, 0),
 control <- list(num_iter = 10, start_iter = 0, keep_iter = 1, flip_rate = 0.1)
 post_samples <- sample_pum_static(h116.c, hyperparams,
                                   control, pos_leg = grep("SCALISE", rownames(h116.c$votes)),
-                                  verbose = FALSE)
+                                  verbose = FALSE, pre_run = NULL, appended = FALSE)
 }

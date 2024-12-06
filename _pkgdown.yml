@@ -1,8 +1,18 @@
-url: ~
+title: "pumBayes"
+pkgdown:
+  as_is: true
+
+url: "https://skylarshihub.github.io/pumBayes/"
+
+navbar:
+  structure:
+    left: [getstarted, reference]
+  components:
+    getstarted:
+      text: Vignette
+      href: articles/vignettes.html
+    reference:
+      text: Contents
+
 template:
   bootstrap: 5
-
-articles:
-  - title: "Vignette"
-    contents:
-      - vignettes

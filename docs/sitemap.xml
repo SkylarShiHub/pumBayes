@@ -1,69 +1,69 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   <url>
-    <loc>/404.html</loc>
+    <loc>https://skylarshihub.github.io/pumBayes/404.html</loc>
   </url>
   <url>
-    <loc>/articles/index.html</loc>
+    <loc>https://skylarshihub.github.io/pumBayes/articles/index.html</loc>
   </url>
   <url>
-    <loc>/articles/vignettes.html</loc>
+    <loc>https://skylarshihub.github.io/pumBayes/articles/vignettes.html</loc>
   </url>
   <url>
-    <loc>/authors.html</loc>
+    <loc>https://skylarshihub.github.io/pumBayes/authors.html</loc>
   </url>
   <url>
-    <loc>/index.html</loc>
+    <loc>https://skylarshihub.github.io/pumBayes/index.html</loc>
   </url>
   <url>
-    <loc>/reference/calc_waic.html</loc>
+    <loc>https://skylarshihub.github.io/pumBayes/reference/calc_waic.html</loc>
   </url>
   <url>
-    <loc>/reference/get_prob_mat.html</loc>
+    <loc>https://skylarshihub.github.io/pumBayes/reference/get_prob_mat.html</loc>
   </url>
   <url>
-    <loc>/reference/house_votes_m.html</loc>
+    <loc>https://skylarshihub.github.io/pumBayes/reference/house_votes_m.html</loc>
   </url>
   <url>
-    <loc>/reference/index.html</loc>
+    <loc>https://skylarshihub.github.io/pumBayes/reference/index.html</loc>
   </url>
   <url>
-    <loc>/reference/init_data_gp_rcpp.html</loc>
+    <loc>https://skylarshihub.github.io/pumBayes/reference/init_data_gp_rcpp.html</loc>
   </url>
   <url>
-    <loc>/reference/init_data_rcpp.html</loc>
+    <loc>https://skylarshihub.github.io/pumBayes/reference/init_data_rcpp.html</loc>
   </url>
   <url>
-    <loc>/reference/init_y_star_m.html</loc>
+    <loc>https://skylarshihub.github.io/pumBayes/reference/init_y_star_m.html</loc>
   </url>
   <url>
-    <loc>/reference/item_char.html</loc>
+    <loc>https://skylarshihub.github.io/pumBayes/reference/item_char.html</loc>
   </url>
   <url>
-    <loc>/reference/post_rank.html</loc>
+    <loc>https://skylarshihub.github.io/pumBayes/reference/post_rank.html</loc>
   </url>
   <url>
-    <loc>/reference/post_samples.html</loc>
+    <loc>https://skylarshihub.github.io/pumBayes/reference/post_samples.html</loc>
   </url>
   <url>
-    <loc>/reference/predict_ideal.html</loc>
+    <loc>https://skylarshihub.github.io/pumBayes/reference/predict_ideal.html</loc>
   </url>
   <url>
-    <loc>/reference/predict_irt.html</loc>
+    <loc>https://skylarshihub.github.io/pumBayes/reference/predict_irt.html</loc>
   </url>
   <url>
-    <loc>/reference/predict_pum.html</loc>
+    <loc>https://skylarshihub.github.io/pumBayes/reference/predict_pum.html</loc>
   </url>
   <url>
-    <loc>/reference/preprocess_rollcall.html</loc>
+    <loc>https://skylarshihub.github.io/pumBayes/reference/preprocess_rollcall.html</loc>
   </url>
   <url>
-    <loc>/reference/sample_pum_dynamic.html</loc>
+    <loc>https://skylarshihub.github.io/pumBayes/reference/sample_pum_dynamic.html</loc>
   </url>
   <url>
-    <loc>/reference/sample_pum_static.html</loc>
+    <loc>https://skylarshihub.github.io/pumBayes/reference/sample_pum_static.html</loc>
   </url>
   <url>
-    <loc>/reference/tune_hyper.html</loc>
+    <loc>https://skylarshihub.github.io/pumBayes/reference/tune_hyper.html</loc>
   </url>
 </urlset>
