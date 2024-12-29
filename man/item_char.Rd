@@ -24,5 +24,5 @@ This function calculates the data needed to plot the item characteristic
 curve for a specific issue based on posterior samples.
 }
 \examples{
-item_data <- item_char(vote_num = 5, post_samples = post_samples_pum)
+item_data <- item_char(vote_num = 5, x = c(-4,2), post_samples = post_samples_pum)
 }

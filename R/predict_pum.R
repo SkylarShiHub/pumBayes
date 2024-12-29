@@ -16,7 +16,7 @@
 predict_pum <- function(vote_info, years_v = NULL, post_samples) {
   if (is.matrix(vote_info)) {
 
-    if (all(is.na(vote_info) | vote_info %in% c(0, 1))) {
+    if (all(is.na(vote_info) | (vote_info %in% c(0, 1) & is.numeric(vote_info)))) {
       vote_m <- vote_info
     } else if (all(is.logical(vote_info))) {
       vote_m <- vote_info
@@ -61,6 +61,11 @@ predict_pum <- function(vote_info, years_v = NULL, post_samples) {
   }
 
   leg_pos <- as.matrix(post_samples$beta)
+  match_index <- grep("RHJackson_beta_9", colnames(leg_pos))
+  if (length(match_index) > 0) {
+    leg_pos <- leg_pos[, -match_index]
+  }
+
   alpha_draws0 <- as.matrix(cbind(post_samples$alpha1, post_samples$alpha2))
   alpha_draws <- t(apply(alpha_draws0, 1, function(row) {
     as.vector(t(matrix(row, ncol = 2)))
@@ -96,7 +101,7 @@ predict_pum <- function(vote_info, years_v = NULL, post_samples) {
           (leg_pos[iter, ind] - delta_draws[iter, 2 * j])
 
         yea_prob <- bvnd(-mean_1 / sqrt(2), -mean_2 / sqrt(2), 0.5)
-        yea_prob <- min(max(yea_prob, 1e-9), 1 - 1e-9)
+        yea_prob <- pmin(pmax(yea_prob, 1e-9), 1 - 1e-9)
 
         prob_array[i, j, iter] <- yea_prob
       }

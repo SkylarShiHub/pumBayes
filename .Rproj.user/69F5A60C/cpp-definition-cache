@@ -64,7 +64,7 @@
     },
     {
         "file": "E:/OneDrive/UW_Seattle/paper/Abel/pumBayes/src/three_utility_probit_helper_functions.cpp",
-        "file_last_write": 1730159238.0,
+        "file_last_write": 1735364464.0,
         "definitions": [
             {
                 "usr": "c:three_utility_probit_helper_functions.cpp@377@macro@PI",
@@ -282,7 +282,7 @@
                 "parent_name": "",
                 "name": "sample_probit_dynamic_rcpp(arma::mat, arma::mat, arma::mat, arma::mat, arma::mat, arma::uvec, arma::uvec, arma::uvec, arma::umat, arma::uvec, int, int, int, int, int, arma::vec, arma::mat, arma::vec, arma::mat, double, double, double, double, int, int, int, double, arma::uvec, arma::uvec, arma::uvec, arma::uvec, bool)",
                 "file": "E:/OneDrive/UW_Seattle/paper/Abel/pumBayes/src/three_utility_probit_helper_functions.cpp",
-                "line": 789,
+                "line": 792,
                 "column": 6,
                 "hidden": false
             },
@@ -292,7 +292,7 @@
                 "parent_name": "",
                 "name": "calc_probit_bggum_three_utility_post_prob_m(arma::mat, arma::mat, arma::mat, arma::mat, int)",
                 "file": "E:/OneDrive/UW_Seattle/paper/Abel/pumBayes/src/three_utility_probit_helper_functions.cpp",
-                "line": 1072,
+                "line": 1078,
                 "column": 11,
                 "hidden": false
             },
@@ -302,7 +302,7 @@
                 "parent_name": "",
                 "name": "calc_waic_probit_bggum_three_utility(arma::mat, arma::mat, arma::mat, arma::mat, int)",
                 "file": "E:/OneDrive/UW_Seattle/paper/Abel/pumBayes/src/three_utility_probit_helper_functions.cpp",
-                "line": 1094,
+                "line": 1100,
                 "column": 11,
                 "hidden": false
             },
@@ -312,7 +312,7 @@
                 "parent_name": "",
                 "name": "calc_waic_probit_bggum_three_utility_block_rcpp(arma::mat, arma::mat, arma::mat, arma::mat, arma::uvec, arma::mat)",
                 "file": "E:/OneDrive/UW_Seattle/paper/Abel/pumBayes/src/three_utility_probit_helper_functions.cpp",
-                "line": 1140,
+                "line": 1146,
                 "column": 11,
                 "hidden": false
             },
@@ -322,7 +322,7 @@
                 "parent_name": "",
                 "name": "calc_waic_probit_bggum_three_utility_block_vote_rcpp(arma::mat, arma::mat, arma::mat, arma::mat, arma::mat)",
                 "file": "E:/OneDrive/UW_Seattle/paper/Abel/pumBayes/src/three_utility_probit_helper_functions.cpp",
-                "line": 1185,
+                "line": 1191,
                 "column": 11,
                 "hidden": false
             },
@@ -332,7 +332,7 @@
                 "parent_name": "",
                 "name": "calc_waic_cpp(arma::mat, arma::mat, arma::mat, arma::mat, arma::mat, arma::mat)",
                 "file": "E:/OneDrive/UW_Seattle/paper/Abel/pumBayes/src/three_utility_probit_helper_functions.cpp",
-                "line": 1229,
+                "line": 1235,
                 "column": 11,
                 "hidden": false
             },
@@ -342,7 +342,7 @@
                 "parent_name": "",
                 "name": "cal_prob_cpp(Rcpp::NumericMatrix, Rcpp::List)",
                 "file": "E:/OneDrive/UW_Seattle/paper/Abel/pumBayes/src/three_utility_probit_helper_functions.cpp",
-                "line": 1271,
+                "line": 1277,
                 "column": 15,
                 "hidden": false
             }

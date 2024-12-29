@@ -14,7 +14,7 @@
 #'   - `rho_sigma`: Standard deviation of the prior for `rho`.
 #' @param control A list specifying the MCMC configurations, including:
 #'   - `num_iter`: Total number of iterations.
-#'   - `start_iter`: Iteration number to start retaining samples (after burn-in).
+#'   - `burn_in`: The number of initial iterations to discard as part of the burn-in period before retaining samples.
 #'   - `keep_iter`: Interval at which samples are retained.
 #'   - `flip_rate`: Probability of directly flipping signs in the M-H step, rather than resampling from the priors.
 #'   - `sd_prop_rho`: Proposal standard deviation for `rho` in the Metropolis-Hastings step.
@@ -39,7 +39,7 @@
 #' hyperparams = list(beta_mean = 0, beta_var = 1, alpha_mean = c(0, 0), alpha_scale = 5,
 #'                     delta_mean = c(-2, 10), delta_scale = sqrt(10),
 #'                     rho_mean = 0.9, rho_sigma = 0.04)
-#' control = list(num_iter = 100, start_iter = 0, keep_iter = 1, flip_rate = 0.1, sd_prop_rho = 0.1)
+#' control = list(num_iter = 100, burn_in = 0, keep_iter = 1, flip_rate = 0.1, sd_prop_rho = 0.1)
 #' sign_refs = list(pos_inds = c(39, 5), neg_inds = c(12, 29),
 #'                  pos_year_inds = list(1:31, 1), neg_year_inds = list(1:29, 1:24))
 #' post_samples_dy = sample_pum_dynamic(mqVotes, mqTime, hyperparams, control, sign_refs,
@@ -55,7 +55,7 @@ sample_pum_dynamic <- function(
 
   if (is.matrix(vote_info)) {
 
-    if (all(is.na(vote_info) | vote_info %in% c(0, 1))) {
+    if (all(is.na(vote_info) | (vote_info %in% c(0, 1) & is.numeric(vote_info)))) {
       vote_m <- vote_info
     } else if (all(is.logical(vote_info))) {
       vote_m <- vote_info
@@ -78,13 +78,31 @@ sample_pum_dynamic <- function(
   }
 
 
-  total_iter = (control$num_iter - control$start_iter) %/% control$keep_iter
-  init_info <- init_data_gp_rcpp(
-    vote_m, years_v, leg_pos_init = NULL, alpha_pos_init = NULL, delta_pos_init = NULL,
-    rho_init = NULL, y_star_m_1_init = NULL, y_star_m_2_init = NULL,
-    y_star_m_3_init = NULL, total_iter,
-    sign_refs$pos_inds, sign_refs$neg_inds,
-    sign_refs$pos_year_inds, sign_refs$neg_year_inds)
+  total_iter = (control$num_iter - control$burn_in) %/% control$keep_iter
+
+  # Initialize parameters from previous run or default
+  if (!is.null(pre_run)) {
+    init_info <- init_data_gp_rcpp(
+      vote_m, years_v,
+      leg_pos_init = as.numeric(tail(pre_run$beta, 1)),
+      alpha_pos_init = as.numeric(cbind(tail(pre_run$alpha1, 1), tail(pre_run$alpha2, 1))),
+      delta_pos_init = as.numeric(cbind(tail(pre_run$delta1, 1), tail(pre_run$delta2, 1))),
+      rho_init = unlist(pre_run$rho)[length(unlist(pre_run$rho))],
+      y_star_m_1_init = NULL,
+      y_star_m_2_init = NULL,
+      y_star_m_3_init = NULL,
+      total_iter,
+      sign_refs$pos_inds, sign_refs$neg_inds,
+      sign_refs$pos_year_inds, sign_refs$neg_year_inds)
+  } else {
+    init_info <- init_data_gp_rcpp(
+      vote_m, years_v, leg_pos_init = NULL, alpha_pos_init = NULL, delta_pos_init = NULL,
+      rho_init = NULL, y_star_m_1_init = NULL, y_star_m_2_init = NULL,
+      y_star_m_3_init = NULL, total_iter,
+      sign_refs$pos_inds, sign_refs$neg_inds,
+      sign_refs$pos_year_inds, sign_refs$neg_year_inds)
+  }
+
 
   #Init info
   draw_info <- sample_probit_dynamic_rcpp(
@@ -95,7 +113,7 @@ sample_pum_dynamic <- function(
     hyperparams$alpha_mean, diag(2) * (hyperparams$alpha_scale^2),
     hyperparams$delta_mean, diag(2) * (hyperparams$delta_scale^2),
     hyperparams$rho_mean, hyperparams$rho_sigma, control$sd_prop_rho, 10000000,
-    control$num_iter, control$start_iter, control$keep_iter,
+    control$num_iter, control$burn_in, control$keep_iter,
     control$flip_rate, init_info[[15]], init_info[[16]],
     init_info[[17]], init_info[[18]], verbose)
 
@@ -135,18 +153,26 @@ sample_pum_dynamic <- function(
   rho_list <- as.data.frame(all_param_draw[, "rho"])
   colnames(rho_list) <- "rho"
 
-  return(c(list(
+  # Append samples if required
+  if (!is.null(pre_run) && appended) {
+    beta_list <- rbind(pre_run$beta, beta_list)
+    alpha1_list <- rbind(pre_run$alpha1, alpha1_list)
+    alpha2_list <- rbind(pre_run$alpha2, alpha2_list)
+    delta1_list <- rbind(pre_run$delta1, delta1_list)
+    delta2_list <- rbind(pre_run$delta2, delta2_list)
+    rho_list <- rbind(pre_run$rho, rho_list)
+  }
+
+  return(list(
     beta = beta_list,
     alpha1 = alpha1_list,
     alpha2 = alpha2_list,
     delta1 = delta1_list,
     delta2 = delta2_list,
-    rho = rho_list),
-    other_info = draw_info[-1]
-  ))
+    rho = rho_list))
 }
 
-#' @title initialize three auxiliary parameters y
+
 init_y_star_m <- function(vote_m) {
   y_star_m_1 <- vote_m
   y_star_m_2 <- vote_m
@@ -169,7 +195,7 @@ init_y_star_m <- function(vote_m) {
   return(list(y_star_m_1, y_star_m_2, y_star_m_3))
 }
 
-#' @title initialize member and position parameters and get starting points
+
 init_data_gp_rcpp <- function(
     vote_m, years_v, leg_pos_init, alpha_pos_init, delta_pos_init, rho_init,
     y_star_m_1_init, y_star_m_2_init, y_star_m_3_init, total_iter,

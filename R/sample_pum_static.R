@@ -10,7 +10,7 @@
 #'   - `delta_scale`: Scale parameter for `delta1` and `delta2`.
 #' @param control A list of MCMC configurations:
 #'   - `num_iter`: Total number of iterations. It is recommended to set this to at least 30,000 to ensure reliable results.
-#'   - `start_iter`: Iteration number to start retaining data after burn-in.
+#'   - `burn_in`: The number of initial iterations to discard as part of the burn-in period before retaining samples.
 #'   - `keep_iter`: Interval at which iterations are kept for posterior samples.
 #'   - `flip_rate`: Probability of directly flipping signs in the M-H step, rather than resampling from the priors.
 #' @param pos_leg Name of the legislator whose position is kept positive.
@@ -29,7 +29,7 @@
 #' @examples
 #' hyperparams <- list(beta_mean = 0, beta_var = 1, alpha_mean = c(0, 0),
 #'                     alpha_scale = 5, delta_mean = c(-2, 10), delta_scale = sqrt(10))
-#' control <- list(num_iter = 10, start_iter = 0, keep_iter = 1, flip_rate = 0.1)
+#' control <- list(num_iter = 10, burn_in = 0, keep_iter = 1, flip_rate = 0.1)
 #' post_samples <- sample_pum_static(h116.c, hyperparams,
 #'                                   control, pos_leg = grep("SCALISE", rownames(h116.c$votes)),
 #'                                   verbose = FALSE, pre_run = NULL, appended = FALSE)
@@ -40,7 +40,7 @@ sample_pum_static <- function(vote_info, hyperparams, control,
   # 1. Check and process input vote object
   if (is.matrix(vote_info)) {
 
-    if (all(is.na(vote_info) | vote_info %in% c(0, 1))) {
+    if (all(is.na(vote_info) | (vote_info %in% c(0, 1) & is.numeric(vote_info)))) {
       vote_m <- vote_info
     } else if (all(is.logical(vote_info))) {
       vote_m <- vote_info
@@ -86,14 +86,15 @@ sample_pum_static <- function(vote_info, hyperparams, control,
   # # output
   vote_out = vote_m
 
-  total_iter = (control$num_iter - control$start_iter) %/% control$keep_iter
+  total_iter = (control$num_iter - control$burn_in) %/% control$keep_iter
+
   # Initialize parameters from previous run or default
   if (!is.null(pre_run)) {
     init_info <- init_data_rcpp(
       vote_m,
-      leg_pos_init = tail(pre_run$beta, 1),
-      alpha_pos_init = cbind(tail(pre_run$alpha1, 1), tail(pre_run$alpha2, 1)),
-      delta_pos_init = cbind(tail(pre_run$delta1, 1), tail(pre_run$delta2, 1)),
+      leg_pos_init = as.numeric(tail(pre_run$beta, 1)),
+      alpha_pos_init = as.numeric(cbind(tail(pre_run$alpha1, 1), tail(pre_run$alpha2, 1))),
+      delta_pos_init = as.numeric(cbind(tail(pre_run$delta1, 1), tail(pre_run$delta2, 1))),
       y_star_m_1_init = NULL,
       y_star_m_2_init = NULL,
       y_star_m_3_init = NULL,
@@ -113,11 +114,19 @@ sample_pum_static <- function(vote_info, hyperparams, control,
     init_info[[8]], init_info[[9]], hyperparams$beta_mean, sqrt(hyperparams$beta_var),
     hyperparams$alpha_mean, diag(2) * (hyperparams$alpha_scale^2),
     hyperparams$delta_mean, diag(2) * (hyperparams$delta_scale^2), 10000000,
-    control$num_iter, control$start_iter, control$keep_iter, control$flip_rate,
+    control$num_iter, control$burn_in, control$keep_iter, control$flip_rate,
     pos_ind - 1, verbose)
 
   all_param_draw = draw_info[[1]]
-  leg_names <- sapply(rownames(vote_m), function(name) {paste(name, "beta", sep = "_")})
+  if (!is.null(rownames(vote_m))){
+    leg_names <- rownames(vote_m)
+    # leg_names <- sapply(rownames(vote_m), function(name) {paste(name, "beta", sep = "_")})
+  } else if (!is.null(rownames(vote_info$legis.data))){
+    leg_names <- rownames(vote_info$legis.data)
+  } else {
+    leg_names <- rep("", nrow(vote_m))
+  }
+
   if (is.null(colnames(vote_m))) {
     colnames(vote_m) <- sapply(1:ncol(vote_m), function(i) {
       paste("vote", i, sep = "_")
@@ -163,7 +172,7 @@ sample_pum_static <- function(vote_info, hyperparams, control,
   ))
 }
 
-#' @title initialize three auxiliary parameters y
+
 init_y_star_m <- function(vote_m) {
   y_star_m_1 <- vote_m
   y_star_m_2 <- vote_m
@@ -186,7 +195,7 @@ init_y_star_m <- function(vote_m) {
   return(list(y_star_m_1, y_star_m_2, y_star_m_3))
 }
 
-#' @title initialize member and position parameters and get starting points
+
 init_data_rcpp <- function(vote_m, leg_pos_init, alpha_pos_init, delta_pos_init,
                            y_star_m_1_init, y_star_m_2_init, y_star_m_3_init, total_iter) {
 

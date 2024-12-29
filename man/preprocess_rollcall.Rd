@@ -11,9 +11,9 @@ preprocess_rollcall(
 )
 }
 \arguments{
-\item{x}{A rollcall object}
+\item{x}{A roll call object.}
 
-\item{data_preprocess}{A list of parameters for preprocessing:
+\item{data_preprocess}{A list of parameters for preprocessing data:
 \itemize{
   \item `leg_rm` (default = NULL): A vector of indices specifying legislators to be removed.
   \item `combine_leg_index` (default = NULL): A list of vectors where each vector specifies the indices of legislators to be combined.
@@ -23,12 +23,12 @@ preprocess_rollcall(
 }}
 }
 \value{
-A rollcall object that has been processed
+A roll call object that has been processed.
 }
 \description{
 This function is used to preprocess roll call data for analysis.
 It allows users to remove legislators, combine legislators with specified indices, exclude lopsided votes based on minority voting proportions, and filter out legislators with excessive missing votes.
 }
 \examples{
-h116.clean = preprocess_rollcall(h116)
+h116.c = preprocess_rollcall(h116)
 }

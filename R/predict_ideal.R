@@ -14,7 +14,7 @@ predict_ideal <- function(vote_info, post_samples) {
   # Check and process input vote object
   if (is.matrix(vote_info)) {
 
-    if (all(is.na(vote_info) | vote_info %in% c(0, 1))) {
+    if (all(is.na(vote_info) | (vote_info %in% c(0, 1) & is.numeric(vote_info)))) {
       vote_m <- vote_info
     } else if (all(is.logical(vote_info))) {
       vote_m <- vote_info

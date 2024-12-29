@@ -1,8 +1,8 @@
 #' @title Preprocess Roll Call Data
 #' @description This function is used to preprocess roll call data for analysis.
 #' It allows users to remove legislators, combine legislators with specified indices, exclude lopsided votes based on minority voting proportions, and filter out legislators with excessive missing votes.
-#' @param x A rollcall object
-#' @param data_preprocess A list of parameters for preprocessing:
+#' @param x A roll call object.
+#' @param data_preprocess A list of parameters for preprocessing data:
 #'   \itemize{
 #'     \item `leg_rm` (default = NULL): A vector of indices specifying legislators to be removed.
 #'     \item `combine_leg_index` (default = NULL): A list of vectors where each vector specifies the indices of legislators to be combined.
@@ -10,9 +10,9 @@
 #'     \item `lop_leg` (default = 0.6): A threshold indicating the maximum allowable proportion of missing votes for each legislator. Legislators with a proportion of missing votes greater than this value are removed.
 #'     \item `lop_issue` (default = 0): A threshold for the proportion of non-missing votes on the minority side. Voting issues with a minority proportion lower than this value are excluded.
 #'   }
-#' @return A rollcall object that has been processed
+#' @return A roll call object that has been processed.
 #' @examples
-#' h116.clean = preprocess_rollcall(h116)
+#' h116.c = preprocess_rollcall(h116)
 #' @export
 preprocess_rollcall <- function(x, data_preprocess=list(leg_rm = NULL, combine_leg_index = NULL,
                                                         combine_leg_party = NULL,
@@ -23,7 +23,7 @@ preprocess_rollcall <- function(x, data_preprocess=list(leg_rm = NULL, combine_l
   lop_leg = data_preprocess$lop_leg
   lop_issue = data_preprocess$lop_issue
 
-  ## checks before data preprocess
+  # Checks before data preprocess
   if (!(is.list(x))){
     stop("x is not a list.")
   }
@@ -37,7 +37,7 @@ preprocess_rollcall <- function(x, data_preprocess=list(leg_rm = NULL, combine_l
   }
 
 
-  # 1. Check input vote object
+  # 1. Check for input vote object
   if (!("votes" %in% names(x))) {
     stop("x does not include 'votes' component.")
   } else if (all(is.na(x$votes))){
@@ -79,9 +79,8 @@ preprocess_rollcall <- function(x, data_preprocess=list(leg_rm = NULL, combine_l
 
   legis.data.out = x$legis.data
   rm.index = c()
+
   # 2. combine legislators
-  # if there is legis object, do the same operations
-  # check the party object : warning party information will not be updated
   if (!is.null(combine_leg)){
     for (i in seq_along(combine_leg)) {
 
@@ -102,7 +101,6 @@ preprocess_rollcall <- function(x, data_preprocess=list(leg_rm = NULL, combine_l
       })
 
       vote_m[indices[2],] = combined_row
-      # vote_m = vote_m[-indices[1],]
 
       # output
       if ("legis.data" %in% names(x)){
@@ -127,9 +125,6 @@ preprocess_rollcall <- function(x, data_preprocess=list(leg_rm = NULL, combine_l
   }
 
   # 3. Exclude lopsided votes issues
-  # lop_issue expressed as the proportion of non-missing votes on the minority side.
-
-  # h116$vote.data exist and not NULL
   to_remove <- which(apply(vote_m, 2, function(col) {
 
     col_no_na <- col[!is.na(col)]
@@ -146,8 +141,6 @@ preprocess_rollcall <- function(x, data_preprocess=list(leg_rm = NULL, combine_l
   }
 
   # 4. Remove legislators where missing values is greater than or equal to 'lop_leg'
-
-  # legislator part
   vote_m_copy <- vote_m
   vote_m_copy[!(vote_m_copy %in% c(x$codes$yea, x$codes$nay))] <- NA
   absent_members <- which(rowMeans(is.na(vote_m_copy)) > lop_leg)

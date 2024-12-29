@@ -553,8 +553,11 @@ List sample_probit_static_rcpp(
 
   arma::vec acceptsum = zeros<vec>(vote_m.n_cols);  
   arma::vec current_param_val_v = all_param_draws.row(0).t(); // take the first row (initial values) and transpose
-  arma::vec z_v = ones<vec>(vote_m.n_cols);
+  // arma::vec z_v = ones<vec>(vote_m.n_cols);
   // arma::vec z_v = sign(all_param_draws.row(0).subvec(alpha_v_1_start_ind, alpha_v_1_start_ind + vote_m.n_cols - 1));
+  arma::vec initials = current_param_val_v.subvec(alpha_v_1_start_ind, alpha_v_1_start_ind + vote_m.n_cols - 1);
+  arma::vec z_v = sign(initials);
+
   if (verbose) {
     Rcout << "Running MCMC" << "\n";
   }
@@ -799,7 +802,9 @@ List sample_probit_dynamic_rcpp(
 
   arma::vec acceptsum = zeros<vec>(vote_m.n_cols);
   arma::vec current_param_val_v = all_param_draws.row(0).t();
-  arma::vec z_v = ones<vec>(vote_m.n_cols);
+  // arma::vec z_v = ones<vec>(vote_m.n_cols);
+  arma::vec initials = current_param_val_v.subvec(alpha_v_1_start_ind, alpha_v_1_start_ind + vote_m.n_cols - 1);
+  arma::vec z_v = sign(initials);
 
   if (verbose) {
     Rcout << "Running MCMC" << "\n";
@@ -960,10 +965,11 @@ List sample_probit_dynamic_rcpp(
 
       } else{
         // 2. Metropolis-Hastings for resampling alpha and delta from the priors
-        int accept_j = 0;
+        
         for (int j = 0; j < vote_m.n_cols; j++){
           double L_orig = 0.0;
           double L_new = 0.0;
+          int accept_j = 0;
           double alpha1_new, alpha2_new;
 
           if (z_v_new(j) == 1){
@@ -1020,6 +1026,12 @@ List sample_probit_dynamic_rcpp(
       }
     }
 
+    // sample rho
+    current_param_val_v(rho_ind) = sample_rho(
+      current_param_val_v(rho_ind),
+      current_param_val_v(span(0, alpha_v_1_start_ind - 1)),
+      judge_start_inds, judge_end_inds, rho_mean, rho_sigma, rho_sd);
+
     if (pos_judge_ind.n_elem > 0 || neg_judge_ind.n_elem > 0) {
       auto result = adjust_all_judge_ideology(
           current_param_val_v(span(0, rho_ind - 1)), z_v, 
@@ -1032,12 +1044,6 @@ List sample_probit_dynamic_rcpp(
       z_v = result.second;
     }
     
-    // sample rho
-    current_param_val_v(rho_ind) = sample_rho(
-      current_param_val_v(rho_ind),
-      current_param_val_v(span(0, alpha_v_1_start_ind - 1)),
-      judge_start_inds, judge_end_inds, rho_mean, rho_sigma, rho_sd);
-
     int post_burn_i = i - start_iter + 1;
     if (i >= start_iter && (fmod(post_burn_i, keep_iter) == 0)) {
       int keep_iter_ind = post_burn_i / keep_iter - 1;

@@ -46,7 +46,7 @@ tune_hyper <- function(hyperparams = hyperparams, n_leg, n_issue) {
   return(as.vector(probability))
 }
 
-#' @title calculate probability matrix of a given set of parameters
+
 get_prob_mat <- function(vote, beta, alpha1, alpha2, delta1, delta2) {
 
   prob <- matrix(NA, nrow = nrow(vote), ncol = ncol(vote))

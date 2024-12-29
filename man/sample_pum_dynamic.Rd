@@ -30,7 +30,7 @@ sample_pum_dynamic(
 
 \item{control}{A list specifying the MCMC configurations, including:
 - `num_iter`: Total number of iterations.
-- `start_iter`: Iteration number to start retaining samples (after burn-in).
+- `burn_in`: The number of initial iterations to discard as part of the burn-in period before retaining samples.
 - `keep_iter`: Interval at which samples are retained.
 - `flip_rate`: Probability of directly flipping signs in the M-H step, rather than resampling from the priors.
 - `sd_prop_rho`: Proposal standard deviation for `rho` in the Metropolis-Hastings step.}
@@ -66,7 +66,7 @@ This function generates posterior samples for all parameters based on the dynami
 hyperparams = list(beta_mean = 0, beta_var = 1, alpha_mean = c(0, 0), alpha_scale = 5,
                     delta_mean = c(-2, 10), delta_scale = sqrt(10),
                     rho_mean = 0.9, rho_sigma = 0.04)
-control = list(num_iter = 100, start_iter = 0, keep_iter = 1, flip_rate = 0.1, sd_prop_rho = 0.1)
+control = list(num_iter = 100, burn_in = 0, keep_iter = 1, flip_rate = 0.1, sd_prop_rho = 0.1)
 sign_refs = list(pos_inds = c(39, 5), neg_inds = c(12, 29),
                  pos_year_inds = list(1:31, 1), neg_year_inds = list(1:29, 1:24))
 post_samples_dy = sample_pum_dynamic(mqVotes, mqTime, hyperparams, control, sign_refs,

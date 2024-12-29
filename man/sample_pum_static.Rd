@@ -27,7 +27,7 @@ sample_pum_static(
 
 \item{control}{A list of MCMC configurations:
 - `num_iter`: Total number of iterations. It is recommended to set this to at least 30,000 to ensure reliable results.
-- `start_iter`: Iteration number to start retaining data after burn-in.
+- `burn_in`: The number of initial iterations to discard as part of the burn-in period before retaining samples.
 - `keep_iter`: Interval at which iterations are kept for posterior samples.
 - `flip_rate`: Probability of directly flipping signs in the M-H step, rather than resampling from the priors.}
 
@@ -54,7 +54,7 @@ This function generates posterior samples of all parameters based on the static 
 \examples{
 hyperparams <- list(beta_mean = 0, beta_var = 1, alpha_mean = c(0, 0),
                     alpha_scale = 5, delta_mean = c(-2, 10), delta_scale = sqrt(10))
-control <- list(num_iter = 10, start_iter = 0, keep_iter = 1, flip_rate = 0.1)
+control <- list(num_iter = 10, burn_in = 0, keep_iter = 1, flip_rate = 0.1)
 post_samples <- sample_pum_static(h116.c, hyperparams,
                                   control, pos_leg = grep("SCALISE", rownames(h116.c$votes)),
                                   verbose = FALSE, pre_run = NULL, appended = FALSE)
