@@ -789,7 +789,7 @@ List sample_probit_static_rcpp(
 
 //// Dynamic MCMC ////
 // [[Rcpp::export]]
-List sample_probit_dynamic_rcpp(
+List sample_probit_dynamic_rcpp_flip(
     arma::mat vote_m, arma::mat all_param_draws, arma::mat y_star_m_1, arma::mat y_star_m_2, arma::mat y_star_m_3,
     arma::uvec judge_start_inds, arma::uvec judge_end_inds, arma::uvec case_years,
     arma::umat case_judge_years_ind_m, arma::uvec judge_year_v,
@@ -1026,12 +1026,6 @@ List sample_probit_dynamic_rcpp(
       }
     }
 
-    // sample rho
-    current_param_val_v(rho_ind) = sample_rho(
-      current_param_val_v(rho_ind),
-      current_param_val_v(span(0, alpha_v_1_start_ind - 1)),
-      judge_start_inds, judge_end_inds, rho_mean, rho_sigma, rho_sd);
-
     if (pos_judge_ind.n_elem > 0 || neg_judge_ind.n_elem > 0) {
       auto result = adjust_all_judge_ideology(
           current_param_val_v(span(0, rho_ind - 1)), z_v, 
@@ -1043,6 +1037,13 @@ List sample_probit_dynamic_rcpp(
       current_param_val_v(span(0, rho_ind - 1)) = result.first;
       z_v = result.second;
     }
+
+    // sample rho
+    current_param_val_v(rho_ind) = sample_rho(
+      current_param_val_v(rho_ind),
+      current_param_val_v(span(0, alpha_v_1_start_ind - 1)),
+      judge_start_inds, judge_end_inds, rho_mean, rho_sigma, rho_sd);
+
     
     int post_burn_i = i - start_iter + 1;
     if (i >= start_iter && (fmod(post_burn_i, keep_iter) == 0)) {
@@ -1319,4 +1320,316 @@ NumericMatrix cal_prob_cpp(NumericMatrix vote, List post_samples) {
     colnames(prob_mean) = colnames(vote);
 
     return prob_mean;
+}
+
+vec adjust_all_judge_ideology_ori(
+    vec current_param_val_v, 
+    uvec judge_start_ind,
+    uvec case_year_v, uvec case_judge_year_v,
+    int alpha_v_1_start_ind, int alpha_v_2_start_ind,
+    int delta_v_1_start_ind, int delta_v_2_start_ind,
+    uvec pos_judge_ind, uvec pos_judge_year,
+    uvec neg_judge_ind, uvec neg_judge_year) {
+  
+  
+  for (int i = 0; i < pos_judge_ind.n_elem; i++) {
+    if (current_param_val_v(pos_judge_ind(i)) < 0) {
+      uvec judge_year = find(case_judge_year_v == pos_judge_year(i));
+      uvec cases = find(case_year_v == pos_judge_year(i));
+      current_param_val_v(judge_year) =
+        -current_param_val_v(judge_year);
+      current_param_val_v(alpha_v_1_start_ind + cases) = 
+        -current_param_val_v(alpha_v_1_start_ind + cases);
+      current_param_val_v(alpha_v_2_start_ind + cases) = 
+        -current_param_val_v(alpha_v_2_start_ind + cases);
+      current_param_val_v(delta_v_1_start_ind + cases) = 
+        -current_param_val_v(delta_v_1_start_ind + cases);
+      current_param_val_v(delta_v_2_start_ind + cases) = 
+        -current_param_val_v(delta_v_2_start_ind + cases);
+    }
+  }
+  for (int i = 0; i < neg_judge_ind.n_elem; i++) {
+    if (current_param_val_v(neg_judge_ind(i)) > 0) {
+      uvec judge_year = find(case_judge_year_v == neg_judge_year(i));
+      uvec cases = find(case_year_v == neg_judge_year(i));
+      current_param_val_v(judge_year) =
+        -current_param_val_v(judge_year);
+      current_param_val_v(alpha_v_1_start_ind + cases) = 
+        -current_param_val_v(alpha_v_1_start_ind + cases);
+      current_param_val_v(alpha_v_2_start_ind + cases) = 
+        -current_param_val_v(alpha_v_2_start_ind + cases);
+      current_param_val_v(delta_v_1_start_ind + cases) = 
+        -current_param_val_v(delta_v_1_start_ind + cases);
+      current_param_val_v(delta_v_2_start_ind + cases) = 
+        -current_param_val_v(delta_v_2_start_ind + cases);
+    }
+  }
+  return(current_param_val_v);
+}
+
+double sample_rho_pos_logit_gibbs(
+    double rho, vec ideal_pos_1_m, 
+    uvec judge_start_ind, uvec judge_end_ind,
+    double rho_mean, 
+    double rho_sigma, double rho_sd) {
+  
+  double next_rho = inv_logit(logit(rho) + rho_sd * randn());
+  double next_log_ll = 
+    d_truncnorm(next_rho, rho_mean, rho_sigma, 0, 1, 1) +
+                  log(next_rho) + log(1 - next_rho);
+  double prev_log_ll = 
+    d_truncnorm(rho, rho_mean, rho_sigma, 0, 1, 1) +
+                  log(rho) + log(1 - rho);
+  for (int i = 0; i < judge_start_ind.n_elem; i++) {
+    rowvec pos_v = ideal_pos_1_m(span(judge_start_ind(i),
+                                      judge_end_ind(i))).t();
+    
+    mat prev_ar_1_m = create_ar_1_m(pos_v.n_elem, rho, 1 - rho * rho);
+    prev_log_ll += as_scalar(dmvnorm(pos_v, zeros(pos_v.n_elem), prev_ar_1_m, true));
+    
+    mat next_ar_1_m = create_ar_1_m(pos_v.n_elem, next_rho, 1 - next_rho * next_rho);
+    next_log_ll += as_scalar(dmvnorm(pos_v, zeros(pos_v.n_elem), next_ar_1_m, true));
+  }
+  if (log(randu()) < next_log_ll - prev_log_ll) {
+    return(next_rho);
+  }
+  return(rho);
+}
+
+vec sample_three_utility_probit_matched_alpha(
+    vec y_star_m_1, vec y_star_m_3,  
+    vec beta_v, vec delta_v,
+    vec alpha_mean_v, mat alpha_cov_s,
+    vec delta_mean_v, mat delta_cov_s) {
+  
+  vec beta_diff_v_1 = beta_v - delta_v(0);
+  vec beta_diff_v_2 = beta_v - delta_v(1);
+    
+  mat post_cov = alpha_cov_s.i();
+  post_cov(0, 0) += dot(beta_diff_v_1, beta_diff_v_1);
+  post_cov(1, 1) += dot(beta_diff_v_2, beta_diff_v_2);
+  
+  vec post_mean = solve(alpha_cov_s, alpha_mean_v);
+  post_mean(0) -= dot(beta_diff_v_1, y_star_m_1);
+  post_mean(1) -= dot(beta_diff_v_2, y_star_m_3);
+  post_mean = solve(post_cov, post_mean);
+    
+  double sample_order_up_prob = 
+    R::pnorm(0, post_mean(0), sqrt(1.0 / post_cov(0,0)), false, true) +
+    R::pnorm(0, post_mean(1), sqrt(1.0 / post_cov(1,1)), true, true) +
+    as_scalar(dmvnorm(delta_v.t(), delta_mean_v, delta_cov_s, true));
+  double sample_order_down_prob = 
+    R::pnorm(0, post_mean(0), sqrt(1.0 / post_cov(0,0)), true, true) +
+    R::pnorm(0, post_mean(1), sqrt(1.0 / post_cov(1,1)), false, true) +
+    as_scalar(dmvnorm(delta_v.t(), -delta_mean_v, delta_cov_s, true));
+  
+  double log_sample_prob = sample_order_up_prob - 
+    (max(sample_order_up_prob, sample_order_down_prob) +
+    log(1 + exp(min(sample_order_up_prob, sample_order_down_prob) - 
+                  max(sample_order_up_prob, sample_order_down_prob))));
+  double match_var = (log(randu()) < log_sample_prob) * 2 - 1;
+    
+  vec out_v(3);
+  if (match_var == 1) {
+    out_v(0) = rtn1(post_mean(0), 1.0 / sqrt(post_cov(0, 0)), 
+                    0, datum::inf);
+    out_v(1) = rtn1(post_mean(1), 1.0 / sqrt(post_cov(1, 1)), 
+                    -datum::inf, 0);
+  } else {
+    out_v(0) = rtn1(post_mean(0), 1.0 / sqrt(post_cov(0, 0)), 
+                    -datum::inf, 0);
+    out_v(1) = rtn1(post_mean(1), 1.0 / sqrt(post_cov(1, 1)), 
+                    0, datum::inf);
+  }
+  out_v(2) = match_var;
+  
+  return(out_v);
+}
+
+vec sample_three_utility_probit_matched_delta(
+    vec y_star_m_1, vec y_star_m_3, 
+    vec alpha_v, vec beta_v, double match_var,
+    vec delta_mean_v, mat delta_cov_s) {
+  
+  y_star_m_1 += alpha_v(0) * beta_v;
+  y_star_m_3 += alpha_v(1) * beta_v;
+  
+  mat post_cov = beta_v.n_elem * 
+    diagmat(alpha_v) * diagmat(alpha_v) + 
+    delta_cov_s.i();
+  vec post_mean = match_var * solve(delta_cov_s, delta_mean_v);
+  post_mean(0) += accu(alpha_v(0) * y_star_m_1);
+  post_mean(1) += accu(alpha_v(1) * y_star_m_3);
+  return(rmvnorm(1, solve(post_cov, post_mean),
+                 post_cov.i()).t());
+}
+
+vec sample_three_utility_probit_beta_gp(
+    rowvec y_star_m_1, rowvec y_star_m_3, 
+    rowvec alpha_v_1, rowvec alpha_v_2,
+    rowvec delta_v_1, rowvec delta_v_2, 
+    uvec case_year, double rho) {
+  
+  int years_served = max(case_year) - min(case_year) + 1;
+  mat ar_1_m_inv = create_ar_1_m_inverse(years_served, rho, 1 - rho * rho);
+  y_star_m_1 = y_star_m_1 - alpha_v_1 % delta_v_1;
+  y_star_m_3 = y_star_m_3 - alpha_v_2 % delta_v_2;
+
+  vec post_mean(years_served, fill::zeros);
+  for (int i = 0; i < case_year.n_elem; i++) {
+    ar_1_m_inv(case_year(i), case_year(i)) += 
+      alpha_v_1(i) * alpha_v_1(i) + alpha_v_2(i) * alpha_v_2(i);
+    post_mean(case_year(i)) -=
+      alpha_v_1(i) * y_star_m_1(i) + alpha_v_2(i) * y_star_m_3(i);
+  }
+  post_mean = solve(ar_1_m_inv, post_mean);
+  return(rmvnorm(1, post_mean, ar_1_m_inv.i()).t());
+}
+
+
+// [[Rcpp::export]]
+List sample_probit_dynamic_rcpp(
+    mat vote_m, mat all_param_draws, mat y_star_m_1, mat y_star_m_2, mat y_star_m_3,
+    uvec judge_start_inds, uvec judge_end_inds, uvec case_years, 
+    umat case_judge_years_ind_m, uvec judge_year_v,
+    int alpha_v_1_start_ind, int alpha_v_2_start_ind, 
+    int delta_v_1_start_ind, int delta_v_2_start_ind, int rho_ind,
+    vec alpha_mean_v, mat alpha_cov_s, vec delta_mean_v, mat delta_cov_s, 
+    double rho_mean,double rho_sigma, double rho_sd, double nu, int num_iter, int start_iter, 
+    int keep_iter, double flip_rate, uvec pos_judge_ind, uvec neg_judge_ind,
+    uvec pos_judge_year, uvec neg_judge_year, bool verbose) {
+  
+  
+  vec current_param_val_v = all_param_draws.row(0).t();
+  // vec accept_count(zeta_param_start_ind - psi_param_start_ind);
+  // accept_count.zeros();
+
+  if (verbose) {
+    Rcout << "Running MCMC" << "\n";
+  }
+  auto start_time = std::chrono::steady_clock::now();
+  int report_frequency = 500;
+
+
+  for (int i = 0; i < num_iter; i++) {
+  
+    for (int j = 0; j < vote_m.n_rows; j++) {
+      for (int k = 0; k < vote_m.n_cols; k++) {
+        if (!is_finite(vote_m(j, k))) {
+          continue;
+        }
+        vec y_star_vec = {y_star_m_1(j, k), 
+                          y_star_m_2(j, k), 
+                          y_star_m_3(j, k)};
+        vec out_v = sample_y_star_m(
+          y_star_vec, vote_m(j, k), 
+          current_param_val_v(alpha_v_1_start_ind + k),
+          current_param_val_v(alpha_v_2_start_ind + k),
+          current_param_val_v(judge_start_inds(j) + case_judge_years_ind_m(j, k)), 
+          current_param_val_v(delta_v_1_start_ind + k), 
+          current_param_val_v(delta_v_2_start_ind + k));
+        y_star_m_1(j, k) = out_v(0);  
+        y_star_m_2(j, k) = out_v(1);
+        y_star_m_3(j, k) = out_v(2);
+      }
+    }
+    
+    for (unsigned int j = 0; j < vote_m.n_rows; j++) {
+      uvec current_ind = {j};
+      uvec interested_inds = find_finite(vote_m.row(j).t());
+      rowvec y_star_m_1_v = y_star_m_1.row(j);
+      rowvec y_star_m_3_v = y_star_m_3.row(j);
+      uvec judge_years_v = case_judge_years_ind_m.row(j).t();
+      current_param_val_v(span(
+          judge_start_inds(j), judge_end_inds(j))) =
+        sample_three_utility_probit_beta_gp(
+          y_star_m_1.submat(current_ind, interested_inds),
+          y_star_m_3.submat(current_ind, interested_inds),
+          current_param_val_v(alpha_v_1_start_ind + interested_inds).t(),
+          current_param_val_v(alpha_v_2_start_ind + interested_inds).t(),
+          current_param_val_v(delta_v_1_start_ind + interested_inds).t(),
+          current_param_val_v(delta_v_2_start_ind + interested_inds).t(),
+          judge_years_v(interested_inds), current_param_val_v(rho_ind));
+    }
+    
+    vec match_var_v(vote_m.n_cols);
+    for (unsigned int j = 0; j < vote_m.n_cols; j++) {
+      uvec current_ind = {j};
+      uvec interested_inds = find_finite(vote_m.col(j));
+      vec delta_v = {current_param_val_v(delta_v_1_start_ind + j),
+                     current_param_val_v(delta_v_2_start_ind + j)};
+      uvec judge_years_v = case_judge_years_ind_m.col(j);
+      vec out_v =
+        sample_three_utility_probit_matched_alpha(
+          y_star_m_1.submat(interested_inds, current_ind), 
+          y_star_m_3.submat(interested_inds, current_ind),  
+          current_param_val_v(
+            judge_start_inds(interested_inds) + 
+            judge_years_v(interested_inds)), 
+          delta_v, alpha_mean_v, alpha_cov_s,
+          delta_mean_v, delta_cov_s); 
+      
+      current_param_val_v(alpha_v_1_start_ind + j) = out_v(0);
+      current_param_val_v(alpha_v_2_start_ind + j) = out_v(1);
+      match_var_v(j) = out_v(2);
+    }
+    
+    for (unsigned int j = 0; j < vote_m.n_cols; j++) {
+      uvec current_ind = {j};
+      uvec interested_inds = find_finite(vote_m.col(j));
+      vec alpha_v = {current_param_val_v(alpha_v_1_start_ind + j),
+                     current_param_val_v(alpha_v_2_start_ind + j)};
+      uvec judge_years_v = case_judge_years_ind_m.col(j);
+      vec out_v =
+        sample_three_utility_probit_matched_delta(
+          y_star_m_1.submat(interested_inds, current_ind), 
+          y_star_m_3.submat(interested_inds, current_ind),
+          alpha_v, current_param_val_v(
+              judge_start_inds(interested_inds) + 
+                judge_years_v(interested_inds)), 
+          match_var_v(j), delta_mean_v, delta_cov_s); 
+      current_param_val_v(delta_v_1_start_ind + j) = out_v(0);
+      current_param_val_v(delta_v_2_start_ind + j) = out_v(1);
+    }
+    
+    if (pos_judge_ind.n_elem > 0 || neg_judge_ind.n_elem > 0) {
+      current_param_val_v(span(0, rho_ind - 1)) =
+        adjust_all_judge_ideology_ori(
+          current_param_val_v(span(0, rho_ind - 1)), 
+          judge_start_inds, case_years, judge_year_v,
+          alpha_v_1_start_ind, alpha_v_2_start_ind,
+          delta_v_1_start_ind, delta_v_2_start_ind,
+          pos_judge_ind, pos_judge_year,
+          neg_judge_ind, neg_judge_year);
+    }
+    
+    current_param_val_v(rho_ind) = sample_rho_pos_logit_gibbs(
+      current_param_val_v(rho_ind), 
+      current_param_val_v(span(0, alpha_v_1_start_ind - 1)), 
+      judge_start_inds, judge_end_inds, rho_mean, rho_sigma, rho_sd);
+    
+    int post_burn_i = i - start_iter + 1;
+    if (i >= start_iter && (fmod(post_burn_i, keep_iter) == 0)) {
+      int keep_iter_ind = post_burn_i / keep_iter - 1;
+      all_param_draws.row(keep_iter_ind) = current_param_val_v.t();
+    }
+
+    // verbose
+    if (verbose && (i % report_frequency == 0) && i > 0) {
+      auto current_time = std::chrono::steady_clock::now();
+      auto elapsed_time = std::chrono::duration_cast<std::chrono::seconds>(current_time - start_time).count();
+      double percentage = static_cast<double>(i) / num_iter * 100;
+      double time_per_iter = elapsed_time / static_cast<double>(i);
+      double remaining_time = time_per_iter * (num_iter - i);
+
+      Rcout << "Current iteration: " << i << " / " << num_iter << "\n";
+      Rcout << "Progress: " << round(percentage) << "%\n";
+      Rcout << "Estimated remaining time: " << round(remaining_time / 60.0) << " minutes\n";
+    }
+  }
+ 
+  return(List::create(Named("param_draws") = all_param_draws, 
+                      Named("y_star_m_1") = y_star_m_1, 
+                      Named("y_star_m_2") = y_star_m_2, 
+                      Named("y_star_m_3") = y_star_m_3));
 }
