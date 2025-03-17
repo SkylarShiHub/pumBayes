@@ -812,7 +812,7 @@ List sample_probit_dynamic_rcpp_flip(
   auto start_time = std::chrono::steady_clock::now();
   int report_frequency = 500;
 
-  for (unsigned int i = 0; i < num_iter; i++) {
+  for (int i = 0; i < num_iter; i++) {
     // sample y*
     for (unsigned int j = 0; j < vote_m.n_rows; j++) {
       for (unsigned int k = 0; k < vote_m.n_cols; k++) {
@@ -1201,7 +1201,7 @@ arma::vec calc_waic_probit_bggum_three_utility_block_vote_rcpp(
     Rcout << iter << endl;
     for (unsigned int ind = 0; ind < block_m.n_rows; ind++) {
       int j = block_m(ind, 0);
-      int year = block_m(ind, 1);
+      // int year = block_m(ind, 1);
       double log_prob = 0;
       for (unsigned int i = 0; i < case_vote_m.n_rows; i++) {
         if (!is_finite(case_vote_m(i, j))) {
@@ -1288,18 +1288,18 @@ NumericMatrix cal_prob_cpp(NumericMatrix vote, List post_samples) {
 
     NumericMatrix prob_mean(n_rows, n_cols);
 
-    for (unsigned int k = 0; k < n_samples; ++k) {
+    for (int k = 0; k < n_samples; ++k) {
         NumericMatrix prob(n_rows, n_cols);
         if (k % 5 == 0){
           Rcout << "iter = " << k << endl;
         }
-        for (unsigned int i = 0; i < n_rows; ++i) {
+        for (int i = 0; i < n_rows; ++i) {
             NumericVector term1 = -alpha1(k, _) * (beta(k, i) - delta1(k, _)) / sqrt(2);
             NumericVector term2 = -alpha2(k, _) * (beta(k, i) - delta2(k, _)) / sqrt(2);
 
             NumericVector bvnd_vals = bvndvec(term1, term2, rep(0.5, n_cols));
 
-            for (unsigned int j = 0; j < n_cols; ++j) {
+            for (int j = 0; j < n_cols; ++j) {
                 if (NumericVector::is_na(vote(i, j))) {
                     prob(i, j) = NA_REAL;
                 } else {
@@ -1511,7 +1511,7 @@ List sample_probit_dynamic_rcpp(
   int report_frequency = 500;
 
 
-  for (unsigned int i = 0; i < num_iter; i++) {
+  for (int i = 0; i < num_iter; i++) {
   
     for (unsigned int j = 0; j < vote_m.n_rows; j++) {
       for (unsigned int k = 0; k < vote_m.n_cols; k++) {
