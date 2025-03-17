@@ -1322,20 +1322,20 @@ NumericMatrix cal_prob_cpp(NumericMatrix vote, List post_samples) {
     return prob_mean;
 }
 
-vec adjust_all_judge_ideology_ori(
-    vec current_param_val_v, 
-    uvec judge_start_ind,
-    uvec case_year_v, uvec case_judge_year_v,
+arma::vec adjust_all_judge_ideology_ori(
+  arma::vec current_param_val_v, 
+    arma::uvec judge_start_ind,
+    arma::uvec case_year_v, arma::uvec case_judge_year_v,
     int alpha_v_1_start_ind, int alpha_v_2_start_ind,
     int delta_v_1_start_ind, int delta_v_2_start_ind,
-    uvec pos_judge_ind, uvec pos_judge_year,
-    uvec neg_judge_ind, uvec neg_judge_year) {
+    arma::uvec pos_judge_ind, arma::uvec pos_judge_year,
+    arma::uvec neg_judge_ind, arma::uvec neg_judge_year) {
   
   
   for (int i = 0; i < pos_judge_ind.n_elem; i++) {
     if (current_param_val_v(pos_judge_ind(i)) < 0) {
-      uvec judge_year = find(case_judge_year_v == pos_judge_year(i));
-      uvec cases = find(case_year_v == pos_judge_year(i));
+      arma::uvec judge_year = find(case_judge_year_v == pos_judge_year(i));
+      arma::uvec cases = find(case_year_v == pos_judge_year(i));
       current_param_val_v(judge_year) =
         -current_param_val_v(judge_year);
       current_param_val_v(alpha_v_1_start_ind + cases) = 
@@ -1350,8 +1350,8 @@ vec adjust_all_judge_ideology_ori(
   }
   for (int i = 0; i < neg_judge_ind.n_elem; i++) {
     if (current_param_val_v(neg_judge_ind(i)) > 0) {
-      uvec judge_year = find(case_judge_year_v == neg_judge_year(i));
-      uvec cases = find(case_year_v == neg_judge_year(i));
+      arma::uvec judge_year = find(case_judge_year_v == neg_judge_year(i));
+      arma::uvec cases = find(case_year_v == neg_judge_year(i));
       current_param_val_v(judge_year) =
         -current_param_val_v(judge_year);
       current_param_val_v(alpha_v_1_start_ind + cases) = 
@@ -1368,8 +1368,8 @@ vec adjust_all_judge_ideology_ori(
 }
 
 double sample_rho_pos_logit_gibbs(
-    double rho, vec ideal_pos_1_m, 
-    uvec judge_start_ind, uvec judge_end_ind,
+    double rho, arma::vec ideal_pos_1_m, 
+    arma::uvec judge_start_ind, arma::uvec judge_end_ind,
     double rho_mean, 
     double rho_sigma, double rho_sd) {
   
@@ -1384,10 +1384,10 @@ double sample_rho_pos_logit_gibbs(
     rowvec pos_v = ideal_pos_1_m(span(judge_start_ind(i),
                                       judge_end_ind(i))).t();
     
-    mat prev_ar_1_m = create_ar_1_m(pos_v.n_elem, rho, 1 - rho * rho);
+    arma::mat prev_ar_1_m = create_ar_1_m(pos_v.n_elem, rho, 1 - rho * rho);
     prev_log_ll += as_scalar(dmvnorm(pos_v, zeros(pos_v.n_elem), prev_ar_1_m, true));
     
-    mat next_ar_1_m = create_ar_1_m(pos_v.n_elem, next_rho, 1 - next_rho * next_rho);
+    arma::mat next_ar_1_m = create_ar_1_m(pos_v.n_elem, next_rho, 1 - next_rho * next_rho);
     next_log_ll += as_scalar(dmvnorm(pos_v, zeros(pos_v.n_elem), next_ar_1_m, true));
   }
   if (log(randu()) < next_log_ll - prev_log_ll) {
@@ -1396,20 +1396,20 @@ double sample_rho_pos_logit_gibbs(
   return(rho);
 }
 
-vec sample_three_utility_probit_matched_alpha(
-    vec y_star_m_1, vec y_star_m_3,  
-    vec beta_v, vec delta_v,
-    vec alpha_mean_v, mat alpha_cov_s,
-    vec delta_mean_v, mat delta_cov_s) {
+arma::vec sample_three_utility_probit_matched_alpha(
+  arma::vec y_star_m_1, arma::vec y_star_m_3,  
+  arma::vec beta_v, arma::vec delta_v,
+  arma::vec alpha_mean_v, arma::mat alpha_cov_s,
+  arma::vec delta_mean_v, arma::mat delta_cov_s) {
   
-  vec beta_diff_v_1 = beta_v - delta_v(0);
-  vec beta_diff_v_2 = beta_v - delta_v(1);
+    arma::vec beta_diff_v_1 = beta_v - delta_v(0);
+    arma::vec beta_diff_v_2 = beta_v - delta_v(1);
     
-  mat post_cov = alpha_cov_s.i();
+    arma::mat post_cov = alpha_cov_s.i();
   post_cov(0, 0) += dot(beta_diff_v_1, beta_diff_v_1);
   post_cov(1, 1) += dot(beta_diff_v_2, beta_diff_v_2);
   
-  vec post_mean = solve(alpha_cov_s, alpha_mean_v);
+  arma::vec post_mean = solve(alpha_cov_s, alpha_mean_v);
   post_mean(0) -= dot(beta_diff_v_1, y_star_m_1);
   post_mean(1) -= dot(beta_diff_v_2, y_star_m_3);
   post_mean = solve(post_cov, post_mean);
@@ -1429,7 +1429,7 @@ vec sample_three_utility_probit_matched_alpha(
                   max(sample_order_up_prob, sample_order_down_prob))));
   double match_var = (log(randu()) < log_sample_prob) * 2 - 1;
     
-  vec out_v(3);
+  arma::vec out_v(3);
   if (match_var == 1) {
     out_v(0) = rtn1(post_mean(0), 1.0 / sqrt(post_cov(0, 0)), 
                     0, datum::inf);
@@ -1446,36 +1446,36 @@ vec sample_three_utility_probit_matched_alpha(
   return(out_v);
 }
 
-vec sample_three_utility_probit_matched_delta(
-    vec y_star_m_1, vec y_star_m_3, 
-    vec alpha_v, vec beta_v, double match_var,
-    vec delta_mean_v, mat delta_cov_s) {
+arma::vec sample_three_utility_probit_matched_delta(
+  arma::vec y_star_m_1, arma::vec y_star_m_3, 
+  arma::vec alpha_v, arma::vec beta_v, double match_var,
+  arma::vec delta_mean_v, arma::mat delta_cov_s) {
   
   y_star_m_1 += alpha_v(0) * beta_v;
   y_star_m_3 += alpha_v(1) * beta_v;
   
-  mat post_cov = beta_v.n_elem * 
+  arma::mat post_cov = beta_v.n_elem * 
     diagmat(alpha_v) * diagmat(alpha_v) + 
     delta_cov_s.i();
-  vec post_mean = match_var * solve(delta_cov_s, delta_mean_v);
+    arma::vec post_mean = match_var * solve(delta_cov_s, delta_mean_v);
   post_mean(0) += accu(alpha_v(0) * y_star_m_1);
   post_mean(1) += accu(alpha_v(1) * y_star_m_3);
   return(rmvnorm(1, solve(post_cov, post_mean),
                  post_cov.i()).t());
 }
 
-vec sample_three_utility_probit_beta_gp(
+arma::vec sample_three_utility_probit_beta_gp(
     rowvec y_star_m_1, rowvec y_star_m_3, 
     rowvec alpha_v_1, rowvec alpha_v_2,
     rowvec delta_v_1, rowvec delta_v_2, 
-    uvec case_year, double rho) {
+    arma::uvec case_year, double rho) {
   
   int years_served = max(case_year) - min(case_year) + 1;
-  mat ar_1_m_inv = create_ar_1_m_inverse(years_served, rho, 1 - rho * rho);
+  arma::mat ar_1_m_inv = create_ar_1_m_inverse(years_served, rho, 1 - rho * rho);
   y_star_m_1 = y_star_m_1 - alpha_v_1 % delta_v_1;
   y_star_m_3 = y_star_m_3 - alpha_v_2 % delta_v_2;
 
-  vec post_mean(years_served, fill::zeros);
+  arma::vec post_mean(years_served, fill::zeros);
   for (int i = 0; i < case_year.n_elem; i++) {
     ar_1_m_inv(case_year(i), case_year(i)) += 
       alpha_v_1(i) * alpha_v_1(i) + alpha_v_2(i) * alpha_v_2(i);
@@ -1489,19 +1489,19 @@ vec sample_three_utility_probit_beta_gp(
 
 // [[Rcpp::export]]
 List sample_probit_dynamic_rcpp(
-    mat vote_m, mat all_param_draws, mat y_star_m_1, mat y_star_m_2, mat y_star_m_3,
-    uvec judge_start_inds, uvec judge_end_inds, uvec case_years, 
-    umat case_judge_years_ind_m, uvec judge_year_v,
+  arma::mat vote_m, arma::mat all_param_draws, arma::mat y_star_m_1, arma::mat y_star_m_2, arma::mat y_star_m_3,
+    arma::uvec judge_start_inds, arma::uvec judge_end_inds, arma::uvec case_years, 
+    arma::umat case_judge_years_ind_m, arma::uvec judge_year_v,
     int alpha_v_1_start_ind, int alpha_v_2_start_ind, 
     int delta_v_1_start_ind, int delta_v_2_start_ind, int rho_ind,
-    vec alpha_mean_v, mat alpha_cov_s, vec delta_mean_v, mat delta_cov_s, 
+    arma::vec alpha_mean_v, arma::mat alpha_cov_s, arma::vec delta_mean_v, arma::mat delta_cov_s, 
     double rho_mean,double rho_sigma, double rho_sd, double nu, int num_iter, int start_iter, 
-    int keep_iter, double flip_rate, uvec pos_judge_ind, uvec neg_judge_ind,
-    uvec pos_judge_year, uvec neg_judge_year, bool verbose) {
+    int keep_iter, double flip_rate, arma::uvec pos_judge_ind, arma::uvec neg_judge_ind,
+    arma::uvec pos_judge_year, arma::uvec neg_judge_year, bool verbose) {
   
   
-  vec current_param_val_v = all_param_draws.row(0).t();
-  // vec accept_count(zeta_param_start_ind - psi_param_start_ind);
+      arma::vec current_param_val_v = all_param_draws.row(0).t();
+  // arma::vec accept_count(zeta_param_start_ind - psi_param_start_ind);
   // accept_count.zeros();
 
   if (verbose) {
@@ -1518,10 +1518,10 @@ List sample_probit_dynamic_rcpp(
         if (!is_finite(vote_m(j, k))) {
           continue;
         }
-        vec y_star_vec = {y_star_m_1(j, k), 
+        arma::vec y_star_vec = {y_star_m_1(j, k), 
                           y_star_m_2(j, k), 
                           y_star_m_3(j, k)};
-        vec out_v = sample_y_star_m(
+                          arma::vec out_v = sample_y_star_m(
           y_star_vec, vote_m(j, k), 
           current_param_val_v(alpha_v_1_start_ind + k),
           current_param_val_v(alpha_v_2_start_ind + k),
@@ -1535,11 +1535,11 @@ List sample_probit_dynamic_rcpp(
     }
     
     for (unsigned int j = 0; j < vote_m.n_rows; j++) {
-      uvec current_ind = {j};
-      uvec interested_inds = find_finite(vote_m.row(j).t());
+      arma::uvec current_ind = {j};
+      arma::uvec interested_inds = find_finite(vote_m.row(j).t());
       rowvec y_star_m_1_v = y_star_m_1.row(j);
       rowvec y_star_m_3_v = y_star_m_3.row(j);
-      uvec judge_years_v = case_judge_years_ind_m.row(j).t();
+      arma::uvec judge_years_v = case_judge_years_ind_m.row(j).t();
       current_param_val_v(span(
           judge_start_inds(j), judge_end_inds(j))) =
         sample_three_utility_probit_beta_gp(
@@ -1552,14 +1552,14 @@ List sample_probit_dynamic_rcpp(
           judge_years_v(interested_inds), current_param_val_v(rho_ind));
     }
     
-    vec match_var_v(vote_m.n_cols);
+    arma::vec match_var_v(vote_m.n_cols);
     for (unsigned int j = 0; j < vote_m.n_cols; j++) {
-      uvec current_ind = {j};
-      uvec interested_inds = find_finite(vote_m.col(j));
-      vec delta_v = {current_param_val_v(delta_v_1_start_ind + j),
+      arma::uvec current_ind = {j};
+      arma::uvec interested_inds = find_finite(vote_m.col(j));
+      arma::vec delta_v = {current_param_val_v(delta_v_1_start_ind + j),
                      current_param_val_v(delta_v_2_start_ind + j)};
-      uvec judge_years_v = case_judge_years_ind_m.col(j);
-      vec out_v =
+                     arma::uvec judge_years_v = case_judge_years_ind_m.col(j);
+                     arma::vec out_v =
         sample_three_utility_probit_matched_alpha(
           y_star_m_1.submat(interested_inds, current_ind), 
           y_star_m_3.submat(interested_inds, current_ind),  
@@ -1575,12 +1575,12 @@ List sample_probit_dynamic_rcpp(
     }
     
     for (unsigned int j = 0; j < vote_m.n_cols; j++) {
-      uvec current_ind = {j};
-      uvec interested_inds = find_finite(vote_m.col(j));
-      vec alpha_v = {current_param_val_v(alpha_v_1_start_ind + j),
+      arma::uvec current_ind = {j};
+      arma::uvec interested_inds = find_finite(vote_m.col(j));
+      arma::vec alpha_v = {current_param_val_v(alpha_v_1_start_ind + j),
                      current_param_val_v(alpha_v_2_start_ind + j)};
-      uvec judge_years_v = case_judge_years_ind_m.col(j);
-      vec out_v =
+                     arma::uvec judge_years_v = case_judge_years_ind_m.col(j);
+                     arma::vec out_v =
         sample_three_utility_probit_matched_delta(
           y_star_m_1.submat(interested_inds, current_ind), 
           y_star_m_3.submat(interested_inds, current_ind),
