@@ -108,7 +108,7 @@ double bvnd(double DH, double DK, double R) {
     if (std::abs(R) > 0.0) {
       double hs = (h * h + k * k) / 2.0;
       double asr = std::asin(R);
-      for (int i = 0; i < x.n_elem; ++i) {
+      for (unsigned int i = 0; i < x.n_elem; ++i) {
         for (int is = -1; is <= 1; is += 2) {
           double sn = std::sin(asr * (is * x[i] + 1) / 2.0);
           bvn += w[i] * std::exp((sn * hk - hs) / (1.0 - sn * sn));
@@ -140,7 +140,7 @@ double bvnd(double DH, double DK, double R) {
                 * (1 - c * bs * (1 - d * bs/5) / 3);
       }
       a = a / 2;
-      for (int i = 0; i < x.n_elem; i++) {
+      for (unsigned int i = 0; i < x.n_elem; i++) {
         for (int is = -1; is <= 1; is += 2) {
           xs = pow(a * (is * x[i] + 1), 2);
           rs = sqrt(1 - xs);
@@ -344,7 +344,7 @@ arma::vec sample_beta_gp(
   y_star_m_3 = y_star_m_3 - alpha_v_2 % delta_v_2;
 
   arma::vec post_mean(years_served, fill::zeros);
-  for (int i = 0; i < case_year.n_elem; i++) {
+  for (unsigned int i = 0; i < case_year.n_elem; i++) {
     ar_1_m_inv(case_year(i), case_year(i)) +=
       alpha_v_1(i) * alpha_v_1(i) + alpha_v_2(i) * alpha_v_2(i);
     post_mean(case_year(i)) -=
@@ -462,7 +462,7 @@ double sample_rho(
   double prev_log_ll =
     d_truncnorm(rho, rho_mean, rho_sigma, 0, 1, 1) +
                   log(rho) + log(1 - rho);
-  for (int i = 0; i < judge_start_ind.n_elem; i++) {
+  for (unsigned int i = 0; i < judge_start_ind.n_elem; i++) {
     rowvec pos_v = ideal_pos_1_m(span(judge_start_ind(i),
                                       judge_end_ind(i))).t();
 
@@ -504,7 +504,7 @@ std::pair<vec, vec> adjust_all_judge_ideology(
     arma::uvec pos_judge_ind, arma::uvec pos_judge_year,
     arma::uvec neg_judge_ind, arma::uvec neg_judge_year) {
 
-  for (int i = 0; i < pos_judge_ind.n_elem; i++) {
+  for (unsigned int i = 0; i < pos_judge_ind.n_elem; i++) {
     if (current_param_val_v(pos_judge_ind(i)) < 0) {
       arma::uvec judge_year = find(case_judge_year_v == pos_judge_year(i));
       arma::uvec cases = find(case_year_v == pos_judge_year(i));
@@ -521,7 +521,7 @@ std::pair<vec, vec> adjust_all_judge_ideology(
       z_v(cases) = -z_v(cases);
     }
   }
-  for (int i = 0; i < neg_judge_ind.n_elem; i++) {
+  for (unsigned int i = 0; i < neg_judge_ind.n_elem; i++) {
     if (current_param_val_v(neg_judge_ind(i)) > 0) {
       arma::uvec judge_year = find(case_judge_year_v == neg_judge_year(i));
       arma::uvec cases = find(case_year_v == neg_judge_year(i));
@@ -566,8 +566,8 @@ List sample_probit_static_rcpp(
   for (int i = 0; i < num_iter; i++) {
 
     // sample y_star
-    for (int k = 0; k < vote_m.n_rows; k++) {
-      for (int j = 0; j < vote_m.n_cols; j++) {
+    for (unsigned int k = 0; k < vote_m.n_rows; k++) {
+      for (unsigned int j = 0; j < vote_m.n_cols; j++) {
         if (!is_finite(vote_m(k, j))) {
           continue;
         }
@@ -812,10 +812,10 @@ List sample_probit_dynamic_rcpp_flip(
   auto start_time = std::chrono::steady_clock::now();
   int report_frequency = 500;
 
-  for (int i = 0; i < num_iter; i++) {
+  for (unsigned int i = 0; i < num_iter; i++) {
     // sample y*
-    for (int j = 0; j < vote_m.n_rows; j++) {
-      for (int k = 0; k < vote_m.n_cols; k++) {
+    for (unsigned int j = 0; j < vote_m.n_rows; j++) {
+      for (unsigned int k = 0; k < vote_m.n_cols; k++) {
         if (!is_finite(vote_m(j, k))) {
           continue;
         }
@@ -916,7 +916,7 @@ List sample_probit_dynamic_rcpp_flip(
       if (randu() < flip_rate){ // switch between method 1 and 2
         
         // 1. Metropolis-Hastings for just flipping the signs
-        for (int j = 0; j < vote_m.n_cols; j++){
+        for (unsigned int j = 0; j < vote_m.n_cols; j++){
           double L_orig = 0.0;
           double L_new = 0.0;
           int accept_j = 0;
@@ -925,7 +925,7 @@ List sample_probit_dynamic_rcpp_flip(
           arma::vec beta_j_v = current_param_val_v(judge_start_inds(interested_inds) + 
           judge_years_v(interested_inds));
 
-          for (int k = 0; k < beta_j_v.n_elem; k++) {
+          for (unsigned int k = 0; k < beta_j_v.n_elem; k++) {
             arma::vec param_now = {beta_j_v(k),
                          current_param_val_v(alpha_v_1_start_ind + j),
                          current_param_val_v(alpha_v_2_start_ind + j),
@@ -966,7 +966,7 @@ List sample_probit_dynamic_rcpp_flip(
       } else{
         // 2. Metropolis-Hastings for resampling alpha and delta from the priors
         
-        for (int j = 0; j < vote_m.n_cols; j++){
+        for (unsigned int j = 0; j < vote_m.n_cols; j++){
           double L_orig = 0.0;
           double L_new = 0.0;
           int accept_j = 0;
@@ -987,7 +987,7 @@ List sample_probit_dynamic_rcpp_flip(
           arma::vec beta_j_v = current_param_val_v(judge_start_inds(interested_inds) + 
           judge_years_v(interested_inds));
 
-          for (int k = 0; k < beta_j_v.n_elem; k++) {
+          for (unsigned int k = 0; k < beta_j_v.n_elem; k++) {
             arma::vec param_now = {beta_j_v(k),
                          current_param_val_v(alpha_v_1_start_ind + j),
                          current_param_val_v(alpha_v_2_start_ind + j),
@@ -1081,9 +1081,9 @@ arma::mat calc_probit_bggum_three_utility_post_prob_m(
     arma::mat case_vote_m, int num_votes) {
 
   arma::mat post_prob(case_vote_m.n_rows, case_vote_m.n_cols, fill::zeros);
-  for (int iter = 0; iter < leg_ideology.n_rows; iter++) {
-    for (int j = 0; j < case_vote_m.n_cols; j++) {
-      for (int i = 0; i < case_vote_m.n_rows; i++) {
+  for (unsigned int iter = 0; iter < leg_ideology.n_rows; iter++) {
+    for (unsigned int j = 0; j < case_vote_m.n_cols; j++) {
+      for (unsigned int i = 0; i < case_vote_m.n_rows; i++) {
         double mean_1 =
           alpha_m(iter, 2 * j) * (
               leg_ideology(iter, i) - delta_m(iter, 2 * j));
@@ -1105,13 +1105,13 @@ arma::vec calc_waic_probit_bggum_three_utility(
   arma::vec mean_prob(num_votes, fill::zeros);
   arma::vec mean_log_prob(num_votes, fill::zeros);
   arma::vec log_prob_var(num_votes, fill::zeros);
-  for (int iter = 0; iter < leg_ideology.n_rows; iter++) {
+  for (unsigned int iter = 0; iter < leg_ideology.n_rows; iter++) {
     if (iter + 1 % 100 == 0) {
       Rcout << iter << "\n";
     }
     int vote_num = 0;
-    for (int j = 0; j < case_vote_m.n_cols; j++) {
-      for (int i = 0; i < case_vote_m.n_rows; i++) {
+    for (unsigned int j = 0; j < case_vote_m.n_cols; j++) {
+      for (unsigned int i = 0; i < case_vote_m.n_rows; i++) {
         if (!is_finite(case_vote_m(i, j))) {
           continue;
         }
@@ -1153,8 +1153,8 @@ arma::vec calc_waic_probit_bggum_three_utility_block_rcpp(
   arma::vec mean_log_prob(block_m.n_rows, fill::zeros);
   arma::vec log_prob_var(block_m.n_rows, fill::zeros);
 
-  for (int iter = 0; iter < leg_ideology.n_rows; iter++) {
-    for (int ind = 0; ind < block_m.n_rows; ind++) {
+  for (unsigned int iter = 0; iter < leg_ideology.n_rows; iter++) {
+    for (unsigned int ind = 0; ind < block_m.n_rows; ind++) {
       int i = block_m(ind, 0);
       int year = block_m(ind, 1);
       double log_prob = 0;
@@ -1197,13 +1197,13 @@ arma::vec calc_waic_probit_bggum_three_utility_block_vote_rcpp(
   mean_prob.fill(-datum::inf);
   arma::vec mean_log_prob(block_m.n_rows, fill::zeros);
   arma::vec log_prob_var(block_m.n_rows, fill::zeros);
-  for (int iter = 0; iter < leg_ideology.n_rows; iter++) {
+  for (unsigned int iter = 0; iter < leg_ideology.n_rows; iter++) {
     Rcout << iter << endl;
-    for (int ind = 0; ind < block_m.n_rows; ind++) {
+    for (unsigned int ind = 0; ind < block_m.n_rows; ind++) {
       int j = block_m(ind, 0);
       int year = block_m(ind, 1);
       double log_prob = 0;
-      for (int i = 0; i < case_vote_m.n_rows; i++) {
+      for (unsigned int i = 0; i < case_vote_m.n_rows; i++) {
         if (!is_finite(case_vote_m(i, j))) {
           continue;
         }
@@ -1241,11 +1241,11 @@ arma::vec calc_waic_cpp(
   mean_prob.fill(-datum::inf);
   arma::vec mean_log_prob(case_vote_m.n_rows, fill::zeros);
   arma::vec log_prob_var(case_vote_m.n_rows, fill::zeros);
-  for (int iter = 0; iter < leg_ideology.n_rows; iter++) {
+  for (unsigned int iter = 0; iter < leg_ideology.n_rows; iter++) {
     Rcout << iter << endl;
-    for (int ind = 0; ind < case_vote_m.n_rows; ind++) {
+    for (unsigned int ind = 0; ind < case_vote_m.n_rows; ind++) {
       double log_prob = 0;
-      for (int j = 0; j < case_vote_m.n_cols; j++) {
+      for (unsigned int j = 0; j < case_vote_m.n_cols; j++) {
         if (!is_finite(case_vote_m(ind, j))) {
           continue;
         }
@@ -1288,18 +1288,18 @@ NumericMatrix cal_prob_cpp(NumericMatrix vote, List post_samples) {
 
     NumericMatrix prob_mean(n_rows, n_cols);
 
-    for (int k = 0; k < n_samples; ++k) {
+    for (unsigned int k = 0; k < n_samples; ++k) {
         NumericMatrix prob(n_rows, n_cols);
         if (k % 5 == 0){
           Rcout << "iter = " << k << endl;
         }
-        for (int i = 0; i < n_rows; ++i) {
+        for (unsigned int i = 0; i < n_rows; ++i) {
             NumericVector term1 = -alpha1(k, _) * (beta(k, i) - delta1(k, _)) / sqrt(2);
             NumericVector term2 = -alpha2(k, _) * (beta(k, i) - delta2(k, _)) / sqrt(2);
 
             NumericVector bvnd_vals = bvndvec(term1, term2, rep(0.5, n_cols));
 
-            for (int j = 0; j < n_cols; ++j) {
+            for (unsigned int j = 0; j < n_cols; ++j) {
                 if (NumericVector::is_na(vote(i, j))) {
                     prob(i, j) = NA_REAL;
                 } else {
@@ -1332,7 +1332,7 @@ arma::vec adjust_all_judge_ideology_ori(
     arma::uvec neg_judge_ind, arma::uvec neg_judge_year) {
   
   
-  for (int i = 0; i < pos_judge_ind.n_elem; i++) {
+  for (unsigned int i = 0; i < pos_judge_ind.n_elem; i++) {
     if (current_param_val_v(pos_judge_ind(i)) < 0) {
       arma::uvec judge_year = find(case_judge_year_v == pos_judge_year(i));
       arma::uvec cases = find(case_year_v == pos_judge_year(i));
@@ -1348,7 +1348,7 @@ arma::vec adjust_all_judge_ideology_ori(
         -current_param_val_v(delta_v_2_start_ind + cases);
     }
   }
-  for (int i = 0; i < neg_judge_ind.n_elem; i++) {
+  for (unsigned int i = 0; i < neg_judge_ind.n_elem; i++) {
     if (current_param_val_v(neg_judge_ind(i)) > 0) {
       arma::uvec judge_year = find(case_judge_year_v == neg_judge_year(i));
       arma::uvec cases = find(case_year_v == neg_judge_year(i));
@@ -1380,7 +1380,7 @@ double sample_rho_pos_logit_gibbs(
   double prev_log_ll = 
     d_truncnorm(rho, rho_mean, rho_sigma, 0, 1, 1) +
                   log(rho) + log(1 - rho);
-  for (int i = 0; i < judge_start_ind.n_elem; i++) {
+  for (unsigned int i = 0; i < judge_start_ind.n_elem; i++) {
     rowvec pos_v = ideal_pos_1_m(span(judge_start_ind(i),
                                       judge_end_ind(i))).t();
     
@@ -1476,7 +1476,7 @@ arma::vec sample_three_utility_probit_beta_gp(
   y_star_m_3 = y_star_m_3 - alpha_v_2 % delta_v_2;
 
   arma::vec post_mean(years_served, fill::zeros);
-  for (int i = 0; i < case_year.n_elem; i++) {
+  for (unsigned int i = 0; i < case_year.n_elem; i++) {
     ar_1_m_inv(case_year(i), case_year(i)) += 
       alpha_v_1(i) * alpha_v_1(i) + alpha_v_2(i) * alpha_v_2(i);
     post_mean(case_year(i)) -=
@@ -1511,10 +1511,10 @@ List sample_probit_dynamic_rcpp(
   int report_frequency = 500;
 
 
-  for (int i = 0; i < num_iter; i++) {
+  for (unsigned int i = 0; i < num_iter; i++) {
   
-    for (int j = 0; j < vote_m.n_rows; j++) {
-      for (int k = 0; k < vote_m.n_cols; k++) {
+    for (unsigned int j = 0; j < vote_m.n_rows; j++) {
+      for (unsigned int k = 0; k < vote_m.n_cols; k++) {
         if (!is_finite(vote_m(j, k))) {
           continue;
         }
