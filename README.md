@@ -16,7 +16,3 @@ install.packages("devtools")
 library(devtools)
 install_github("SkylarShiHub/pumBayes")
 ```
-
-### Documents
-
-For more detailed usage instructions, please refer to the **vignette** (https://SkylarShiHub.github.io/pumBayes/articles/vignettes.html).
