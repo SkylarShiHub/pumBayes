@@ -1,16 +1,39 @@
 Package: pumBayes
 Type: Package
-Title: Bayesian Estimation of Probit Unfolding Models
-Version: 0.1.0
-Author: Skylar Shi
+Title: Bayesian Estimation of Probit Unfolding Models for Binary Preference Data
+Version: 1.0.0
+Authors@R: c(person("Skylar", "Shi", role = c("aut", "cre"), 
+           email = "dshi98@uw.edu",
+           comment = c(ORCID = "0009-0001-2818-0299")),
+    person("Abel", "Rodriguez", role = "aut",
+           email = "abelr@uw.edu",
+           comment = c(ORCID = "0000-0001-5503-7394")),
+    person("Rayleigh", "Lei", role = "aut",
+           email = "rayleigh@umich.edu",
+           comment = c(ORCID = "0000-0002-0444-9708")))
 Maintainer: Skylar Shi <dshi98@uw.edu>
-Description: This package provides tools for the Bayesian implementation and analysis of probit unfolding models (PUM), specifically designed for binary preference data.
-Imports:
-    Rcpp, RcppArmadillo, RcppDist, mvtnorm, RcppTN
-LinkingTo: 
-    Rcpp, RcppArmadillo, RcppDist, mvtnorm, RcppTN
+Description: The 'pumBayes' package provides a set of tools for Bayesian 
+    estimation and analysis of Probit Unfolding Models (PUMs), specifically 
+    designed for binary preference data. PUMs are a novel class of scaling 
+    models that allow for both monotonic and non-monotonic response functions. 
+    The package supports Bayesian inference for both static and dynamic PUMs 
+    using Markov chain Monte Carlo (MCMC) algorithms that require minimal or 
+    no tuning. Key functionalities include posterior sampling, hyperparameter 
+    selection, data preprocessing, model fit evaluation, and visualization. 
+    The package is particularly useful for analyzing voting data, such as 
+    those from the U.S. Congress or Supreme Court, but can also be applied 
+    to other contexts where non-monotonic response functions are expected.
 License: GPL-3
 Encoding: UTF-8
 RoxygenNote: 7.3.1
 Depends: 
-    R (>= 2.10)
+    R (>= 3.6.0)
+Imports: 
+    Rcpp, RcppArmadillo, RcppDist, mvtnorm, RcppTN
+LinkingTo:  
+    Rcpp, RcppArmadillo, RcppDist, mvtnorm, RcppTN
+URL: https://www.github.com/SkylarShiHub/pumBayes
+BugReports: https://www.github.com/SkylarShiHub/pumBayes/issues
+VignetteBuilder: knitr
+Language: en
+NeedsCompilation: yes
