@@ -6,13 +6,16 @@
 
 ### Installation
 
-You can install the latest version of **pumBayes** directly from GitHub using the following commands:
+You can install the stable version of **pumBayes** from CRAN:
+
+```r
+install.packages("pumBayes")
+```
+
+Or install the development version from GitHub:
 
 ```R
-# Install devtools package if not already installed
 install.packages("devtools")
-
-# Install pumBayes from GitHub
 library(devtools)
 install_github("SkylarShiHub/pumBayes")
 ```
