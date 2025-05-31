@@ -19,3 +19,7 @@ install.packages("devtools")
 library(devtools)
 install_github("SkylarShiHub/pumBayes")
 ```
+
+### Documentation
+
+CRAN page: https://cran.r-project.org/package=pumBayes
