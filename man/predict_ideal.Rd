@@ -22,5 +22,16 @@ Specifically, it calculates the probabilities of voting "Yea" for each legislato
 issue, (and time period) based on the posterior samples of model parameters.
 }
 \examples{
-prob_ideal = predict_ideal(post_samples_ideal, h116.c)
+\donttest{
+# Long-running example
+data(h116)
+h116.c = preprocess_rollcall(h116)
+require(pscl)
+cl = constrain.legis(h116.c, x = list("CLYBURN" = -1, "SCALISE" = 1),
+                     d = 1)
+h116.c.ideal = ideal(h116.c, d = 1, priors = cl, startvals = cl,
+                     maxiter = 2, thin = 1, burnin = 0,
+                     store.item = TRUE)
+h116.c.ideal.predprob = predict_ideal(h116.c, h116.c.ideal)
+}
 }

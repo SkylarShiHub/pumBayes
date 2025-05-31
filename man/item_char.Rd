@@ -24,5 +24,13 @@ This function calculates the data needed to plot the item characteristic
 curve for a specific issue based on posterior samples.
 }
 \examples{
-item_data <- item_char(vote_num = 5, x = c(-4,2), post_samples = post_samples_pum)
+data(h116)
+h116.c = preprocess_rollcall(h116)
+hyperparams <- list(beta_mean = 0, beta_var = 1, alpha_mean = c(0, 0),
+                    alpha_scale = 5, delta_mean = c(-2, 10), delta_scale = sqrt(10))
+control <- list(num_iter = 2, burn_in = 0, keep_iter = 1, flip_rate = 0.1)
+h116.c.pum <- sample_pum_static(h116.c, hyperparams,
+                                  control, pos_leg = grep("SCALISE", rownames(h116.c$votes)),
+                                  verbose = FALSE, pre_run = NULL, appended = FALSE)
+item_data <- item_char(vote_num = 5, x = c(-4,2), post_samples = h116.c.pum)
 }

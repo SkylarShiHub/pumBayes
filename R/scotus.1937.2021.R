@@ -5,6 +5,7 @@
 #'
 #' @docType data
 #' @name scotus.1937.2021
+#' @aliases mqVotes mqTime
 #'
 #' @format The dataset consists of the following two objects:
 #' \describe{

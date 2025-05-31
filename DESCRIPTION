@@ -3,37 +3,29 @@ Type: Package
 Title: Bayesian Estimation of Probit Unfolding Models for Binary Preference Data
 Version: 1.0.0
 Authors@R: c(person("Skylar", "Shi", role = c("aut", "cre"), 
-           email = "dshi98@uw.edu",
-           comment = c(ORCID = "0009-0001-2818-0299")),
-    person("Abel", "Rodriguez", role = "aut",
-           email = "abelr@uw.edu",
-           comment = c(ORCID = "0000-0001-5503-7394")),
-    person("Rayleigh", "Lei", role = "aut",
-           email = "rayleigh@umich.edu",
-           comment = c(ORCID = "0000-0002-0444-9708")))
+                    email = "dshi98@uw.edu",
+                    comment = c(ORCID = "0009-0001-2818-0299")),
+             person("Abel", "Rodriguez", role = "aut",
+                    email = "abelr@uw.edu",
+                    comment = c(ORCID = "0000-0001-5503-7394")),
+             person("Rayleigh", "Lei", role = "aut",
+                    email = "rayleigh@umich.edu",
+                    comment = c(ORCID = "0000-0002-0444-9708")),
+             person("Jonathan", "Olmsted", role = "cph"))
 Maintainer: Skylar Shi <dshi98@uw.edu>
-Description: The 'pumBayes' package provides a set of tools for Bayesian 
-    estimation and analysis of Probit Unfolding Models (PUMs), specifically 
-    designed for binary preference data. PUMs are a novel class of scaling 
-    models that allow for both monotonic and non-monotonic response functions. 
-    The package supports Bayesian inference for both static and dynamic PUMs 
-    using Markov chain Monte Carlo (MCMC) algorithms that require minimal or 
-    no tuning. Key functionalities include posterior sampling, hyperparameter 
-    selection, data preprocessing, model fit evaluation, and visualization. 
-    The package is particularly useful for analyzing voting data, such as 
-    those from the U.S. Congress or Supreme Court, but can also be applied 
-    to other contexts where non-monotonic response functions are expected.
+Description: Bayesian estimation and analysis methods for Probit Unfolding Models (PUMs), a novel class of scaling models designed for binary preference data. These models allow for both monotonic and non-monotonic response functions. The package supports Bayesian inference for both static and dynamic PUMs using Markov chain Monte Carlo (MCMC) algorithms with minimal or no tuning. Key functionalities include posterior sampling, hyperparameter selection, data preprocessing, model fit evaluation, and visualization. The methods are particularly suited to analyzing voting data, such as from the U.S. Congress or Supreme Court, but can also be applied in other contexts where non-monotonic responses are expected. For methodological details, see Shi et al. (2025) <doi:10.48550/arXiv.2504.00423>.
 License: GPL-3
 Encoding: UTF-8
 RoxygenNote: 7.3.1
-Depends: 
+Depends:
     R (>= 3.6.0)
 Imports: 
-    Rcpp, RcppArmadillo, RcppDist, mvtnorm, RcppTN
+    Rcpp
+Suggests:
+    knitr, rmarkdown, pscl, MCMCpack
 LinkingTo:  
     Rcpp, RcppArmadillo, RcppDist, mvtnorm, RcppTN
-URL: https://www.github.com/SkylarShiHub/pumBayes
-BugReports: https://www.github.com/SkylarShiHub/pumBayes/issues
-VignetteBuilder: knitr
+URL: https://github.com/SkylarShiHub/pumBayes
+BugReports: https://github.com/SkylarShiHub/pumBayes/issues
 Language: en
 NeedsCompilation: yes

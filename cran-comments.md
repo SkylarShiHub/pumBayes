@@ -1,0 +1,1 @@
+The code in rtn1.cpp was taken from Jonathan Olmsted’s GitHub repository at https://github.com/olmjo/RcppTN/blob/master/src/rtn1.cpp, hence his cph designation.  All other code was hand-written by one of the authors or uses code that is part of other R / Rcpp packages.

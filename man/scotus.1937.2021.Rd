@@ -3,6 +3,8 @@
 \docType{data}
 \name{scotus.1937.2021}
 \alias{scotus.1937.2021}
+\alias{mqVotes}
+\alias{mqTime}
 \title{U.S. Supreme Court Voting Data (1937-2021)}
 \format{
 The dataset consists of the following two objects:

@@ -11,7 +11,18 @@
 #' @return An array of probabilities with three dimensions. The first one represents to members, the second one refers to issues,
 #' and the third one refers to MCMC iterations.
 #' @examples
-#' prob_pum_static = predict_pum(h116.c, years_v = NULL, post_samples_pum)
+#' \donttest{
+#' # Long-running example
+#' data(h116)
+#' h116.c = preprocess_rollcall(h116)
+#' hyperparams <- list(beta_mean = 0, beta_var = 1, alpha_mean = c(0, 0),
+#'                     alpha_scale = 5, delta_mean = c(-2, 10), delta_scale = sqrt(10))
+#' control <- list(num_iter = 2, burn_in = 0, keep_iter = 1, flip_rate = 0.1)
+#' h116.c.pum <- sample_pum_static(h116.c, hyperparams,
+#'                                   control, pos_leg = grep("SCALISE", rownames(h116.c$votes)),
+#'                                   verbose = FALSE, pre_run = NULL, appended = FALSE)
+#' h116.c.pum.predprob = predict_pum(h116.c, years_v = NULL, h116.c.pum)
+#' }
 #' @export
 predict_pum <- function(vote_info, years_v = NULL, post_samples) {
   if (is.matrix(vote_info)) {

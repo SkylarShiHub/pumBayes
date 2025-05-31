@@ -6,8 +6,33 @@
 #' @param vote_info A logical vote matrix where rows represent members and columns represent issues.
 #' The entries should be FALSE ("No"), TRUE ("Yes"), or NA (missing data).
 #' @param years_v A vector representing the time period for each vote in the model.
+#' @return An array of probabilities with three dimensions. The first one represents to members, the second one refers to issues,
+#' and the third one refers to MCMC iterations.
 #' @examples
-#' prob_irt_dy = predict_irt(post_samples_irt_dy, mqVotes, mqTime)
+#' \donttest{
+#' # Long-running example
+#' data(scotus.1937.2021)
+#' library(MCMCpack)
+#' special_judge_ind = sapply(c("HLBlack", "PStewart", "WHRehnquist"),
+#'                            function(name){grep(name, rownames(mqVotes))})
+#' e0_v = rep(0, nrow(mqVotes))
+#' E0_v = rep(1, nrow(mqVotes))
+#' e0_v[special_judge_ind] = c(-2, 1, 3)
+#' E0_v[special_judge_ind] = c(10, 10, 10)
+#' theta.start = rep(0, nrow(mqVotes))
+#' indices = c(2, 5, 8, 9, 12, 22, 23, 24, 25, 29, 30, 33, 36, 39,
+#'             42, 43, 44)
+#' values = c(1, 1, -1, -2, -2, 1, -1, 1, 1, -1, 1, 3, 3, 3, 1, 1, -1)
+#' theta.start[indices] = values
+#' data(scotus.1937.2021)
+#' scotus.MQ = MCMCdynamicIRT1d(mqVotes, mqTime, mcmc = 2,
+#'                              burnin = 0, thin = 1, tau2.start = 0.1,
+#'                              theta.start = theta.start, a0 = 0, A0 = 1, b0 = 0, B0 = 1, c0 = -10,
+#'                              d0 = -2, e0 = e0_v, E0 = E0_v,
+#'                              theta.constraints=list(CThomas = "+", SAAlito = "+", WJBrennan = "-",
+#'                                                     WODouglas = "-", CEWhittaker = "+"))
+#' scotus.MQ.predprob = predict_irt(mqVotes, mqTime, scotus.MQ)
+#' }
 #' @export
 predict_irt <- function(vote_info, years_v, post_samples) {
 

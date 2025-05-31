@@ -1,6 +1,6 @@
 #' @title Generate posterior samples from the dynamic probit unfolding model
 #' @description This function generates posterior samples for all parameters based on the dynamic probit unfolding model.
-#' @param vote_m A logical vote matrix where rows represent members and columns represent issues.
+#' @param vote_info A logical vote matrix where rows represent members and columns represent issues.
 #' The entries should be FALSE ("No"), TRUE ("Yes"), or NA (missing data).
 #' @param years_v A vector representing the time period for each vote in the model.
 #' @param hyperparams A list of hyperparameter values including:
@@ -36,14 +36,18 @@
 #'   - `delta2`: A data frame of posterior samples for delta2.
 #'   - `rho`: A data frame of posterior samples for rho.
 #' @examples
-#' hyperparams = list(beta_mean = 0, beta_var = 1, alpha_mean = c(0, 0), alpha_scale = 5,
-#'                     delta_mean = c(-2, 10), delta_scale = sqrt(10),
-#'                     rho_mean = 0.9, rho_sigma = 0.04)
-#' control = list(num_iter = 100, burn_in = 0, keep_iter = 1, flip_rate = 0.1, sd_prop_rho = 0.1)
+#' \donttest{
+#' # Long-running example
+#' data(scotus.1937.2021)
+#' hyperparams = list(alpha_mean = c(0, 0), alpha_scale = 5,
+#'                    delta_mean = c(-2, 10), delta_scale = sqrt(10),
+#'                    rho_mean = 0.9, rho_sigma = 0.04)
+#' control = list(num_iter = 2, burn_in = 0, keep_iter = 1, flip_rate = 0.1, sd_prop_rho = 0.1)
 #' sign_refs = list(pos_inds = c(39, 5), neg_inds = c(12, 29),
 #'                  pos_year_inds = list(1:31, 1), neg_year_inds = list(1:29, 1:24))
-#' post_samples_dy = sample_pum_dynamic(mqVotes, mqTime, hyperparams, control, sign_refs,
-#' verbose = FALSE, pre_run = NULL, appended = FALSE)
+#' scotus.pum = sample_pum_dynamic(mqVotes, mqTime, hyperparams, control, sign_refs,
+#'                                 verbose = FALSE, pre_run = NULL, appended = FALSE)
+#' }
 #' @export
 sample_pum_dynamic <- function(
     vote_info, years_v, hyperparams, control, sign_refs, verbose = FALSE, pre_run = NULL, appended = FALSE) {

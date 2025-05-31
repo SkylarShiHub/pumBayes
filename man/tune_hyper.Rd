@@ -30,5 +30,5 @@ It uses predefined hyperparameters and simulates data based on the specified num
 hyperparams = list(beta_mean = 0, beta_var = 1, alpha_mean = c(0, 0),
                    alpha_scale = 5, delta_mean = c(-2, 10),
                    delta_scale = sqrt(10))
-theta = tune_hyper(hyperparams, n_leg = 1000, n_issue = 1000)
+theta = tune_hyper(hyperparams, n_leg = 10, n_issue = 10)
 }

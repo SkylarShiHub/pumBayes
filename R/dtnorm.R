@@ -15,15 +15,15 @@
 dtnorm <- function(x, mean = 0, sd = 1, lower = -Inf, upper = Inf) {
   # Validate standard deviation
   if (sd <= 0) stop("Standard deviation must be positive.")
-  
+
   # Calculate the untruncated density
   density <- dnorm(x, mean = mean, sd = sd)
-  
+
   # Calculate the normalization constant
   Z <- pnorm(upper, mean = mean, sd = sd) - pnorm(lower, mean = mean, sd = sd)
-  
+
   # Calculate the truncated density
   density_truncated <- ifelse(x >= lower & x <= upper, density / Z, 0)
-  
+
   return(density_truncated)
 }

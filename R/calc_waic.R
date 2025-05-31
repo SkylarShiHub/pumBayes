@@ -6,7 +6,19 @@
 #' @param prob_array An array of probabilities with three dimensions.
 #' @return The block WAIC value for a static PUM or a vector of WAIC by time for a dynamic PUM.
 #' @examples
-#' waic_pum_dy = calc_waic(prob_pum_dy, years_v = NULL, h116.c)
+#' \donttest{
+#' # Long-running example
+#' data(h116)
+#' h116.c = preprocess_rollcall(h116)
+#' hyperparams <- list(beta_mean = 0, beta_var = 1, alpha_mean = c(0, 0),
+#'                     alpha_scale = 5, delta_mean = c(-2, 10), delta_scale = sqrt(10))
+#' control <- list(num_iter = 2, burn_in = 0, keep_iter = 1, flip_rate = 0.1)
+#' h116.c.pum <- sample_pum_static(h116.c, hyperparams,
+#'                                   control, pos_leg = grep("SCALISE", rownames(h116.c$votes)),
+#'                                   verbose = FALSE, pre_run = NULL, appended = FALSE)
+#' h116.c.pum.predprob = predict_pum(h116.c, years_v = NULL, h116.c.pum)
+#' h116.c.pum.waic = calc_waic(h116.c, prob_array = h116.c.pum.predprob)
+#' }
 #' @export
 calc_waic <- function(vote_info, years_v = NULL, prob_array) {
   # Check and process input vote object
