@@ -568,7 +568,7 @@ List sample_probit_static_rcpp(
     // sample y_star
     for (unsigned int k = 0; k < vote_m.n_rows; k++) {
       for (unsigned int j = 0; j < vote_m.n_cols; j++) {
-        if (!is_finite(vote_m(k, j))) {
+        if (!std::isfinite(vote_m(k, j))) {
           continue;
         }
         arma::vec y_star_vec = {y_star_m_1(k, j),
@@ -816,7 +816,7 @@ List sample_probit_dynamic_rcpp_flip(
     // sample y*
     for (unsigned int j = 0; j < vote_m.n_rows; j++) {
       for (unsigned int k = 0; k < vote_m.n_cols; k++) {
-        if (!is_finite(vote_m(j, k))) {
+        if (!std::isfinite(vote_m(j, k))) {
           continue;
         }
         arma::vec y_star_vec = {y_star_m_1(j, k),
@@ -1112,7 +1112,7 @@ arma::vec calc_waic_probit_bggum_three_utility(
     int vote_num = 0;
     for (unsigned int j = 0; j < case_vote_m.n_cols; j++) {
       for (unsigned int i = 0; i < case_vote_m.n_rows; i++) {
-        if (!is_finite(case_vote_m(i, j))) {
+        if (!std::isfinite(case_vote_m(i, j))) {
           continue;
         }
         double mean_1 =
@@ -1160,7 +1160,7 @@ arma::vec calc_waic_probit_bggum_three_utility_block_rcpp(
       double log_prob = 0;
       arma::uvec interested_cases = find(case_year == year);
       for (int j : interested_cases) {
-        if (!is_finite(case_vote_m(i, j))) {
+        if (!std::isfinite(case_vote_m(i, j))) {
           continue;
         }
         double mean_1 =
@@ -1204,7 +1204,7 @@ arma::vec calc_waic_probit_bggum_three_utility_block_vote_rcpp(
       // int year = block_m(ind, 1);
       double log_prob = 0;
       for (unsigned int i = 0; i < case_vote_m.n_rows; i++) {
-        if (!is_finite(case_vote_m(i, j))) {
+        if (!std::isfinite(case_vote_m(i, j))) {
           continue;
         }
         double mean_1 =
@@ -1246,7 +1246,7 @@ arma::vec calc_waic_cpp(
     for (unsigned int ind = 0; ind < case_vote_m.n_rows; ind++) {
       double log_prob = 0;
       for (unsigned int j = 0; j < case_vote_m.n_cols; j++) {
-        if (!is_finite(case_vote_m(ind, j))) {
+        if (!std::isfinite(case_vote_m(ind, j))) {
           continue;
         }
         double mean_1 =
@@ -1515,7 +1515,7 @@ List sample_probit_dynamic_rcpp(
   
     for (unsigned int j = 0; j < vote_m.n_rows; j++) {
       for (unsigned int k = 0; k < vote_m.n_cols; k++) {
-        if (!is_finite(vote_m(j, k))) {
+        if (!std::isfinite(vote_m(j, k))) {
           continue;
         }
         arma::vec y_star_vec = {y_star_m_1(j, k), 
