@@ -22,7 +22,6 @@
 #' @usage data(scotus.1937.2021)
 #'
 #' @source The data were obtained from the Martin-Quinn Scores Database, maintained by Washington University in St. Louis.
-#'   The dataset can be accessed and downloaded from \url{http://mqscores.wustl.edu/replication.php}.
 #'
 #' @examples
 #' data(scotus.1937.2021)

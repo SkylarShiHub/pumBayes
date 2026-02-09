@@ -12,7 +12,8 @@
 
 using namespace Rcpp;
 using namespace arma;
-using namespace std;
+using std::min;
+using std::max;
 #define PI 3.141592653589793
 
 //[[Rcpp::depends(RcppArmadillo, RcppDist, mvtnorm)]]
@@ -463,7 +464,7 @@ double sample_rho(
     d_truncnorm(rho, rho_mean, rho_sigma, 0, 1, 1) +
                   log(rho) + log(1 - rho);
   for (unsigned int i = 0; i < judge_start_ind.n_elem; i++) {
-    rowvec pos_v = ideal_pos_1_m(span(judge_start_ind(i),
+    rowvec pos_v = ideal_pos_1_m(arma::span(judge_start_ind(i),
                                       judge_end_ind(i))).t();
 
     arma::mat prev_ar_1_m = create_ar_1_m(pos_v.n_elem, rho, 1 - rho * rho);
@@ -842,7 +843,7 @@ List sample_probit_dynamic_rcpp_flip(
       rowvec y_star_m_1_v = y_star_m_1.row(j);
       rowvec y_star_m_3_v = y_star_m_3.row(j);
       arma::uvec judge_years_v = case_judge_years_ind_m.row(j).t();
-      current_param_val_v(span(
+      current_param_val_v(arma::span(
           judge_start_inds(j), judge_end_inds(j))) =
         sample_beta_gp(
           y_star_m_1.submat(current_ind, interested_inds),
@@ -1028,20 +1029,20 @@ List sample_probit_dynamic_rcpp_flip(
 
     if (pos_judge_ind.n_elem > 0 || neg_judge_ind.n_elem > 0) {
       auto result = adjust_all_judge_ideology(
-          current_param_val_v(span(0, rho_ind - 1)), z_v, 
+          current_param_val_v(arma::span(0, rho_ind - 1)), z_v, 
           judge_start_inds, case_years, judge_year_v,
           alpha_v_1_start_ind, alpha_v_2_start_ind,
           delta_v_1_start_ind, delta_v_2_start_ind,
           pos_judge_ind, pos_judge_year,
           neg_judge_ind, neg_judge_year);
-      current_param_val_v(span(0, rho_ind - 1)) = result.first;
+      current_param_val_v(arma::span(0, rho_ind - 1)) = result.first;
       z_v = result.second;
     }
 
     // sample rho
     current_param_val_v(rho_ind) = sample_rho(
       current_param_val_v(rho_ind),
-      current_param_val_v(span(0, alpha_v_1_start_ind - 1)),
+      current_param_val_v(arma::span(0, alpha_v_1_start_ind - 1)),
       judge_start_inds, judge_end_inds, rho_mean, rho_sigma, rho_sd);
 
     
@@ -1134,7 +1135,7 @@ arma::vec calc_waic_probit_bggum_three_utility(
         vote_num++;
       }
     }
-    // Rcout << vote_num << endl;
+    // Rcout << vote_num << std::endl;
   }
   return(
     log(mean_prob / leg_ideology.n_rows) -
@@ -1198,7 +1199,7 @@ arma::vec calc_waic_probit_bggum_three_utility_block_vote_rcpp(
   arma::vec mean_log_prob(block_m.n_rows, fill::zeros);
   arma::vec log_prob_var(block_m.n_rows, fill::zeros);
   for (unsigned int iter = 0; iter < leg_ideology.n_rows; iter++) {
-    Rcout << iter << endl;
+    Rcout << iter << std::endl;
     for (unsigned int ind = 0; ind < block_m.n_rows; ind++) {
       int j = block_m(ind, 0);
       // int year = block_m(ind, 1);
@@ -1242,7 +1243,7 @@ arma::vec calc_waic_cpp(
   arma::vec mean_log_prob(case_vote_m.n_rows, fill::zeros);
   arma::vec log_prob_var(case_vote_m.n_rows, fill::zeros);
   for (unsigned int iter = 0; iter < leg_ideology.n_rows; iter++) {
-    Rcout << iter << endl;
+    Rcout << iter << std::endl;
     for (unsigned int ind = 0; ind < case_vote_m.n_rows; ind++) {
       double log_prob = 0;
       for (unsigned int j = 0; j < case_vote_m.n_cols; j++) {
@@ -1291,7 +1292,7 @@ NumericMatrix cal_prob_cpp(NumericMatrix vote, List post_samples) {
     for (int k = 0; k < n_samples; ++k) {
         NumericMatrix prob(n_rows, n_cols);
         if (k % 5 == 0){
-          Rcout << "iter = " << k << endl;
+          Rcout << "iter = " << k << std::endl;
         }
         for (int i = 0; i < n_rows; ++i) {
             NumericVector term1 = -alpha1(k, _) * (beta(k, i) - delta1(k, _)) / sqrt(2);
@@ -1381,7 +1382,7 @@ double sample_rho_pos_logit_gibbs(
     d_truncnorm(rho, rho_mean, rho_sigma, 0, 1, 1) +
                   log(rho) + log(1 - rho);
   for (unsigned int i = 0; i < judge_start_ind.n_elem; i++) {
-    rowvec pos_v = ideal_pos_1_m(span(judge_start_ind(i),
+    rowvec pos_v = ideal_pos_1_m(arma::span(judge_start_ind(i),
                                       judge_end_ind(i))).t();
     
     arma::mat prev_ar_1_m = create_ar_1_m(pos_v.n_elem, rho, 1 - rho * rho);
@@ -1540,7 +1541,7 @@ List sample_probit_dynamic_rcpp(
       rowvec y_star_m_1_v = y_star_m_1.row(j);
       rowvec y_star_m_3_v = y_star_m_3.row(j);
       arma::uvec judge_years_v = case_judge_years_ind_m.row(j).t();
-      current_param_val_v(span(
+      current_param_val_v(arma::span(
           judge_start_inds(j), judge_end_inds(j))) =
         sample_three_utility_probit_beta_gp(
           y_star_m_1.submat(current_ind, interested_inds),
@@ -1593,9 +1594,9 @@ List sample_probit_dynamic_rcpp(
     }
     
     if (pos_judge_ind.n_elem > 0 || neg_judge_ind.n_elem > 0) {
-      current_param_val_v(span(0, rho_ind - 1)) =
+      current_param_val_v(arma::span(0, rho_ind - 1)) =
         adjust_all_judge_ideology_ori(
-          current_param_val_v(span(0, rho_ind - 1)), 
+          current_param_val_v(arma::span(0, rho_ind - 1)), 
           judge_start_inds, case_years, judge_year_v,
           alpha_v_1_start_ind, alpha_v_2_start_ind,
           delta_v_1_start_ind, delta_v_2_start_ind,
@@ -1605,7 +1606,7 @@ List sample_probit_dynamic_rcpp(
     
     current_param_val_v(rho_ind) = sample_rho_pos_logit_gibbs(
       current_param_val_v(rho_ind), 
-      current_param_val_v(span(0, alpha_v_1_start_ind - 1)), 
+      current_param_val_v(arma::span(0, alpha_v_1_start_ind - 1)), 
       judge_start_inds, judge_end_inds, rho_mean, rho_sigma, rho_sd);
     
     int post_burn_i = i - start_iter + 1;

@@ -1,7 +1,7 @@
 Package: pumBayes
 Type: Package
 Title: Bayesian Estimation of Probit Unfolding Models for Binary Preference Data
-Version: 1.0.1
+Version: 1.0.2
 Authors@R: c(person("Skylar", "Shi", role = c("aut", "cre"), 
                     email = "dshi98@uw.edu",
                     comment = c(ORCID = "0009-0001-2818-0299")),
