@@ -117,7 +117,7 @@ double bvnd(double DH, double DK, double R) {
       }
       bvn = bvn * asr / (2.0 * TWOPI);
     }
-    bvn += R::pnorm(-h, 0, 1,-datum::inf, false) * R::pnorm(-k, 0, 1,-datum::inf, false);
+    bvn += R::pnorm(-h, 0, 1,true, false) * R::pnorm(-k, 0, 1,true, false);
   } else {
     if (R < 0.0) {
       k = -k;
@@ -137,7 +137,7 @@ double bvnd(double DH, double DK, double R) {
       }
       if (-hk < 100) {
         b = sqrt(bs);
-        bvn = bvn - exp(-hk/2) * sqrt(TWOPI) * R::pnorm(-b/a, 0, 1,-datum::inf, false) * b
+        bvn = bvn - exp(-hk/2) * sqrt(TWOPI) * R::pnorm(-b/a, 0, 1,true, false) * b
                 * (1 - c * bs * (1 - d * bs/5) / 3);
       }
       a = a / 2;
@@ -156,11 +156,11 @@ double bvnd(double DH, double DK, double R) {
         bvn = -bvn/TWOPI;
     }
     if (R > 0) {
-      bvn = bvn + R::pnorm(-std::max(h, k), 0, 1,-datum::inf, false);
+      bvn = bvn + R::pnorm(-std::max(h, k), 0, 1,true, false);
     } else {
       bvn = -bvn;
       if (k > h) {
-        bvn = bvn + R::pnorm(k, 0, 1,-datum::inf, false) - R::pnorm(h, 0, 1,-datum::inf, false);
+        bvn = bvn + R::pnorm(k, 0, 1, true, false) - R::pnorm(h, 0, 1, true, false);
       }
     }
   }
